@@ -28,14 +28,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug:s
   const [product, settings] = await Promise.all([getProductBySlug((await params).slug), getSettings()]);
   if (!product) notFound();
   const wa = product.available && settings.business_open && settings.whatsapp_number ? buildProductWhatsAppUrl({ number:settings.whatsapp_number, productName:product.name, price:product.price, currency:settings.currency, showPrice:settings.show_prices }) : null;
-  return <><SiteHeader settings={settings}/><main className="container section"><Link href="/catalogo">← Volver al catálogo</Link>
-    <div className="card product-detail" style={{ display:"grid", marginTop:"1.5rem", overflow:"hidden" }}>
-      <div className="product-image" style={{ borderRadius:0, minHeight:300 }}><Image src={product.image_url || "/placeholder.svg"} alt={product.name} fill priority sizes="(max-width:700px) 100vw, 50vw"/></div>
-      <div className="stack" style={{ padding:"clamp(1.2rem,5vw,3rem)" }}>
+  return <><SiteHeader settings={settings} current="catalog"/><main className="container section product-page"><Link className="back-link" href="/catalogo">← Volver al catálogo</Link>
+    <div className="card product-detail">
+      <div className={`product-image product-detail-image ${product.image_url ? "" : "is-placeholder"}`}><Image src={product.image_url || "/placeholder.svg"} alt={product.name} fill priority sizes="(max-width:700px) 100vw, 50vw"/></div>
+      <div className="stack product-detail-content">
         <span className={`badge ${product.available?"available":"unavailable"}`}>{product.available?"Disponible":"No disponible"}</span>
-        <small className="eyebrow">{product.category?.name}</small><h1 style={{ fontFamily:"Georgia,serif", fontSize:"clamp(2rem,7vw,3.5rem)", margin:0 }}>{product.name}</h1>
-        {settings.show_prices && <strong style={{ color:"var(--primary)", fontSize:"1.5rem" }}>{formatPrice(product.price,settings.currency)}</strong>}
-        <p style={{ lineHeight:1.7 }}>{product.description || product.short_description}</p>
+        <small className="eyebrow">{product.category?.name}</small><h1>{product.name}</h1>
+        {settings.show_prices && <strong className="product-detail-price">{formatPrice(product.price,settings.currency)}</strong>}
+        {(product.description || product.short_description) && <p className="product-detail-description">{product.description || product.short_description}</p>}
         {wa ? <WhatsAppButton href={wa}/> : <p className="notice">Este producto no está disponible para consultas en este momento.</p>}
       </div>
     </div>
