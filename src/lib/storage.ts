@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
+import { imageSelectionError } from "@/lib/image-validation";
 
-export const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-export const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const EXTENSIONS: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
@@ -27,11 +26,10 @@ export function detectImageMime(bytes: Uint8Array) {
 }
 
 export async function validateImageFile(file: File) {
-  if (!IMAGE_TYPES.has(file.type)) throw new Error("La imagen debe ser JPG, PNG o WebP.");
-  if (file.size === 0) throw new Error("La imagen está vacía.");
-  if (file.size > MAX_IMAGE_SIZE) throw new Error("La imagen no puede superar 5 MB.");
+  const selectionError = imageSelectionError(file);
+  if (selectionError) throw new Error(selectionError);
   const detectedType = detectImageMime(new Uint8Array(await file.arrayBuffer()));
-  if (detectedType !== file.type) throw new Error("El contenido del archivo no corresponde a una imagen válida.");
+  if (detectedType !== file.type) throw new Error("El archivo seleccionado no es una imagen válida.");
 }
 
 export async function uploadImage(file: File, bucket: ImageBucket): Promise<UploadedImage> {
@@ -40,7 +38,7 @@ export async function uploadImage(file: File, bucket: ImageBucket): Promise<Uplo
   const path = `${crypto.randomUUID()}.${extension}`;
   const supabase = await createClient();
   const { error } = await supabase.storage.from(bucket).upload(path, file, { contentType: file.type });
-  if (error) throw new Error("No pudimos subir la imagen.");
+  if (error) throw new Error("No pudimos subir la imagen. Revisá tu conexión e intentá nuevamente.");
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
   return { bucket, path, publicUrl: data.publicUrl };
 }

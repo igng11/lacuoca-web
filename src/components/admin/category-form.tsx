@@ -1,6 +1,7 @@
 import type { Category } from "@/types/database";
 import { deleteCategory, saveCategory } from "@/app/admin/actions";
 import { ConfirmButton } from "./confirm-button";
+import { FormSubmitButton, PendingFormFields } from "./form-submit-button";
 
 export function CategoryForm({ category }: { category?: Category }) {
   const prefix = `category-${category?.id ?? "new"}`;
@@ -8,9 +9,10 @@ export function CategoryForm({ category }: { category?: Category }) {
     <div className="stack" style={{ paddingTop: "1rem" }}>
       <form action={saveCategory} className="stack">
         <input type="hidden" name="id" value={category?.id || ""} />
+        <PendingFormFields>
         <div className="field">
           <label htmlFor={`${prefix}-name`}>Nombre *</label>
-          <input id={`${prefix}-name`} className="input" name="name" required maxLength={80} defaultValue={category?.name} />
+          <input id={`${prefix}-name`} className="input" name="name" autoComplete="off" required maxLength={80} defaultValue={category?.name} />
         </div>
         <div className="field">
           <label htmlFor={`${prefix}-description`}>Descripción</label>
@@ -18,13 +20,16 @@ export function CategoryForm({ category }: { category?: Category }) {
         </div>
         <div className="field">
           <label htmlFor={`${prefix}-order`}>Orden</label>
-          <input id={`${prefix}-order`} className="input" name="display_order" type="number" min="0" defaultValue={category?.display_order ?? 0} />
+          <input id={`${prefix}-order`} className="input" name="display_order" type="number" inputMode="numeric" min="0" step="1" defaultValue={category?.display_order ?? 0} />
         </div>
         <label className="checkbox">
           <input name="active" type="checkbox" defaultChecked={category?.active ?? true} />
           Visible en el catálogo
         </label>
-        <button className="btn btn-primary">Guardar categoría</button>
+        <FormSubmitButton pendingText={category ? "Actualizando categoría…" : "Creando categoría…"} fullWidth>
+          {category ? "Guardar cambios" : "Crear categoría"}
+        </FormSubmitButton>
+        </PendingFormFields>
       </form>
       {category && (
         <form action={deleteCategory}>

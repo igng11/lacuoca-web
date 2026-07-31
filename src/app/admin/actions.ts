@@ -71,12 +71,12 @@ export async function saveCategory(data: FormData) {
   if (result.error) {
     const message = result.error.code === "23505"
       ? "Ya existe una categoría con ese nombre."
-      : "No pudimos guardar la categoría.";
+      : "No pudimos guardar la categoría. Intentá nuevamente.";
     adminRedirect("/admin/categorias", message, "error");
   }
 
   revalidatePath("/", "layout");
-  adminRedirect("/admin/categorias", "Categoría guardada.");
+  adminRedirect("/admin/categorias", id ? "Categoría actualizada correctamente." : "Categoría creada correctamente.");
 }
 
 export async function deleteCategory(data: FormData) {
@@ -97,9 +97,9 @@ export async function deleteCategory(data: FormData) {
   }
 
   const { error } = await supabase.from("categories").delete().eq("id", id);
-  if (error) adminRedirect("/admin/categorias", "No pudimos eliminar la categoría.", "error");
+  if (error) adminRedirect("/admin/categorias", "No pudimos eliminar la categoría. Intentá nuevamente.", "error");
   revalidatePath("/", "layout");
-  adminRedirect("/admin/categorias", "Categoría eliminada.");
+  adminRedirect("/admin/categorias", "Categoría eliminada correctamente.");
 }
 
 export async function saveProduct(data: FormData) {
@@ -141,7 +141,7 @@ export async function saveProduct(data: FormData) {
   } catch (error) {
     adminRedirect(
       "/admin/productos",
-      error instanceof Error ? error.message : "No pudimos subir la imagen.",
+      error instanceof Error ? error.message : "No pudimos subir la imagen. Revisá tu conexión e intentá nuevamente.",
       "error",
     );
   }
@@ -157,15 +157,15 @@ export async function saveProduct(data: FormData) {
 
   if (result.error) {
     await discardUpload(uploaded);
-    let message = "No pudimos guardar el producto.";
+    let message = "No pudimos guardar el producto. Intentá nuevamente.";
     if (result.error.code === "23505") message = "Ya existe un producto con ese nombre.";
-    if (result.error.code === "23503") message = "La categoría elegida ya no existe.";
+    if (result.error.code === "23503") message = "La categoría seleccionada ya no existe. Actualizá la página y volvé a elegirla.";
     adminRedirect("/admin/productos", message, "error");
   }
 
   if (uploaded && previousImage) await discardPreviousImage("products", previousImage);
   revalidatePath("/", "layout");
-  adminRedirect("/admin/productos", "Producto guardado.");
+  adminRedirect("/admin/productos", id ? "Producto actualizado correctamente." : "Producto guardado correctamente.");
 }
 
 export async function deleteProduct(data: FormData) {
@@ -179,10 +179,10 @@ export async function deleteProduct(data: FormData) {
   if (readError || !product) adminRedirect("/admin/productos", "El producto ya no existe.", "error");
 
   const { error } = await supabase.from("products").delete().eq("id", id);
-  if (error) adminRedirect("/admin/productos", "No pudimos eliminar el producto.", "error");
+  if (error) adminRedirect("/admin/productos", "No pudimos eliminar el producto. Intentá nuevamente.", "error");
   await discardPreviousImage("products", product.image_url as string | null);
   revalidatePath("/", "layout");
-  adminRedirect("/admin/productos", "Producto eliminado.");
+  adminRedirect("/admin/productos", "Producto eliminado correctamente.");
 }
 
 export async function saveSettings(data: FormData) {
@@ -224,7 +224,7 @@ export async function saveSettings(data: FormData) {
     await discardUpload(heroUpload);
     adminRedirect(
       "/admin/configuracion",
-      error instanceof Error ? error.message : "No pudimos subir la imagen.",
+      error instanceof Error ? error.message : "No pudimos subir la imagen. Revisá tu conexión e intentá nuevamente.",
       "error",
     );
   }
@@ -243,7 +243,7 @@ export async function saveSettings(data: FormData) {
   if (result.error) {
     await discardUpload(logoUpload);
     await discardUpload(heroUpload);
-    adminRedirect("/admin/configuracion", "No pudimos guardar la configuración.", "error");
+    adminRedirect("/admin/configuracion", "No pudimos guardar la configuración. Intentá nuevamente.", "error");
   }
 
   if (logoUpload && current?.logo_url) {
@@ -253,5 +253,5 @@ export async function saveSettings(data: FormData) {
     await discardPreviousImage("branding", current.hero_image_url as string);
   }
   revalidatePath("/", "layout");
-  adminRedirect("/admin/configuracion", "Información actualizada.");
+  adminRedirect("/admin/configuracion", "Información del negocio actualizada.");
 }

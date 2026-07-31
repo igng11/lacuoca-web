@@ -2,16 +2,18 @@ import type { Category, Product } from "@/types/database";
 import { deleteProduct, saveProduct } from "@/app/admin/actions";
 import { ConfirmButton } from "./confirm-button";
 import { ImageInput } from "./image-input";
+import { FormSubmitButton, PendingFormFields } from "./form-submit-button";
 
 export function ProductForm({ product, categories }: { product?: Product; categories: Category[] }) {
   const prefix = `product-${product?.id ?? "new"}`;
   return (
     <form action={saveProduct} className="stack" style={{ paddingTop: "1rem" }}>
       <input type="hidden" name="id" value={product?.id || ""} />
+      <PendingFormFields>
       <div className="form-grid two">
         <div className="field">
           <label htmlFor={`${prefix}-name`}>Nombre *</label>
-          <input id={`${prefix}-name`} className="input" name="name" defaultValue={product?.name} required />
+          <input id={`${prefix}-name`} className="input" name="name" defaultValue={product?.name} autoComplete="off" required />
         </div>
         <div className="field">
           <label htmlFor={`${prefix}-category`}>Categoría *</label>
@@ -22,11 +24,11 @@ export function ProductForm({ product, categories }: { product?: Product; catego
         </div>
         <div className="field">
           <label htmlFor={`${prefix}-price`}>Precio *</label>
-          <input id={`${prefix}-price`} className="input" name="price" type="number" min="0" step=".01" defaultValue={product?.price ?? 0} required />
+          <input id={`${prefix}-price`} className="input" name="price" type="number" inputMode="decimal" min="0" step=".01" defaultValue={product?.price ?? 0} required />
         </div>
         <div className="field">
           <label htmlFor={`${prefix}-order`}>Orden</label>
-          <input id={`${prefix}-order`} className="input" name="display_order" type="number" min="0" defaultValue={product?.display_order ?? 0} />
+          <input id={`${prefix}-order`} className="input" name="display_order" type="number" inputMode="numeric" min="0" step="1" defaultValue={product?.display_order ?? 0} />
         </div>
       </div>
       <div className="field">
@@ -50,9 +52,14 @@ export function ProductForm({ product, categories }: { product?: Product; catego
           </label>
         ))}
       </div>
-      <button className="btn btn-primary" disabled={!categories.length}>
-        {categories.length ? "Guardar producto" : "Creá una categoría antes de guardar"}
-      </button>
+      <FormSubmitButton
+        pendingText={product ? "Actualizando producto…" : "Guardando producto…"}
+        disabled={!categories.length}
+        fullWidth
+      >
+        {categories.length ? (product ? "Guardar cambios" : "Guardar producto") : "Creá una categoría antes de guardar"}
+      </FormSubmitButton>
+      </PendingFormFields>
     </form>
   );
 }

@@ -4,6 +4,7 @@ import { slugify } from "@/lib/format";
 import { buildProductWhatsAppUrl, buildWhatsAppUrl, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 import { productSchema, settingsSchema } from "@/lib/validation/schemas";
 import { detectImageMime, storagePathFromPublicUrl } from "@/lib/storage";
+import { imageSelectionError, MAX_IMAGE_SIZE } from "@/lib/image-validation";
 
 const validSettings = {
   business_name: "La Cuoca",
@@ -93,6 +94,13 @@ describe("slugs y validaciones", () => {
 });
 
 describe("imágenes", () => {
+  it("acepta tipos permitidos hasta 4 MB y explica tamaño o formato inválidos", () => {
+    expect(imageSelectionError({ size: MAX_IMAGE_SIZE, type: "image/jpeg" })).toBeNull();
+    expect(imageSelectionError({ size: MAX_IMAGE_SIZE + 1, type: "image/jpeg" })).toContain("4 MB");
+    expect(imageSelectionError({ size: 100, type: "application/pdf" })).toBe("Solo se permiten imágenes JPG, PNG o WebP.");
+    expect(imageSelectionError({ size: 0, type: "image/png" })).toBe("El archivo seleccionado no es una imagen válida.");
+  });
+
   it("detecta firmas JPG, PNG y WebP y rechaza contenido arbitrario", () => {
     expect(detectImageMime(new Uint8Array([0xff, 0xd8, 0xff, 0x00]))).toBe("image/jpeg");
     expect(detectImageMime(new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))).toBe("image/png");

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/supabase/admin";
 import { logout } from "./actions";
+import { FormSubmitButton } from "@/components/admin/form-submit-button";
 
 export const metadata: Metadata = {
   title: "Administración",
@@ -10,5 +11,5 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({children}:{children:React.ReactNode}){
  await requireAdmin();
- return <div className="admin-shell"><header className="admin-nav"><div className="admin-nav-inner"><Link href="/admin" className="brand">Panel simple</Link><div style={{display:"flex",gap:".4rem"}}><Link className="btn btn-soft" href="/" target="_blank">Ver sitio</Link><form action={logout}><button className="btn btn-soft">Salir</button></form></div></div></header><main className="admin-main">{children}</main></div>;
+ return <div className="admin-shell"><header className="admin-nav"><div className="admin-nav-inner"><Link href="/admin" className="brand">Panel simple</Link><div className="admin-nav-actions"><Link className="btn btn-soft" href="/" target="_blank">Ver sitio</Link><form action={logout}><FormSubmitButton variant="soft" pendingText="Saliendo…">Salir</FormSubmitButton></form></div></div></header><main className="admin-main">{children}</main></div>;
 }

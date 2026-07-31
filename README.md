@@ -55,7 +55,7 @@ La publishable key está diseñada para llegar al navegador y su seguridad depen
 5. Copiar la URL y la publishable key a `.env.local`.
 6. Reiniciar el servidor de desarrollo.
 
-La migración crea tablas, restricciones, índices, triggers, RLS y los buckets públicos `products` y `branding`. Cada bucket limita archivos a 5 MB y admite únicamente MIME JPG, PNG o WebP. Las imágenes se sirven públicamente por URL; listar metadata o escribir/eliminar objetos requiere un administrador autorizado.
+La migración crea tablas, restricciones, índices, triggers, RLS y los buckets públicos `products` y `branding`. Cada bucket limita archivos a 4 MB y admite únicamente MIME JPG, PNG o WebP. Las imágenes se sirven públicamente por URL; listar metadata o escribir/eliminar objetos requiere un administrador autorizado.
 
 ### Seed opcional
 
@@ -126,7 +126,7 @@ Las páginas son Server Components salvo controles que necesitan estado del nave
 ## Imágenes
 
 - El cliente limita selección a JPG, PNG o WebP y muestra una vista previa.
-- El servidor limita el tamaño a 5 MB, verifica MIME y firma binaria, y genera un nombre UUID con extensión derivada del contenido declarado.
+- La interfaz, Server Actions, el servidor y Storage usan un límite único de 4 MB. El servidor verifica MIME y firma binaria, y genera un nombre UUID con extensión derivada del contenido declarado.
 - Al reemplazar una imagen, primero se carga la nueva, luego se confirma la escritura de base y recién entonces se intenta borrar la anterior.
 - Si la escritura de base falla, se intenta borrar la carga nueva para evitar huérfanos.
 - Al eliminar un producto, la URL a borrar se lee desde la base, no desde un campo oculto manipulable.

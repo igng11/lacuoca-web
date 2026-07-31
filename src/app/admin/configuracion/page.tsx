@@ -2,6 +2,7 @@ import { Feedback } from "@/components/admin/feedback";
 import { ImageInput } from "@/components/admin/image-input";
 import { saveSettings } from "@/app/admin/actions";
 import { getSettings } from "@/services/catalog";
+import { FormSubmitButton, PendingFormFields } from "@/components/admin/form-submit-button";
 
 export default async function SettingsPage({
   searchParams,
@@ -18,6 +19,7 @@ export default async function SettingsPage({
       </div>
       <Feedback {...message} />
       <form action={saveSettings} className="card stack" style={{ padding: "clamp(1rem,4vw,2rem)" }}>
+        <PendingFormFields>
         <h2>Datos principales</h2>
         <div className="field">
           <label htmlFor="business-name">Nombre del negocio *</label>
@@ -30,11 +32,11 @@ export default async function SettingsPage({
         <div className="form-grid two">
           <div className="field">
             <label htmlFor="whatsapp-number">WhatsApp</label>
-            <input id="whatsapp-number" className="input" name="whatsapp_number" placeholder="+54 9…" defaultValue={settings.whatsapp_number || ""} />
+            <input id="whatsapp-number" className="input" name="whatsapp_number" inputMode="tel" autoComplete="tel" placeholder="+54 9…" defaultValue={settings.whatsapp_number || ""} />
           </div>
           <div className="field">
             <label htmlFor="instagram-url">Instagram (URL completa)</label>
-            <input id="instagram-url" className="input" name="instagram_url" type="url" defaultValue={settings.instagram_url || ""} />
+            <input id="instagram-url" className="input" name="instagram_url" type="url" inputMode="url" autoComplete="url" defaultValue={settings.instagram_url || ""} />
           </div>
         </div>
         <div className="field">
@@ -43,7 +45,7 @@ export default async function SettingsPage({
         </div>
         <div className="field">
           <label htmlFor="business-address">Dirección</label>
-          <input id="business-address" className="input" name="address" defaultValue={settings.address || ""} />
+          <input id="business-address" className="input" name="address" autoComplete="street-address" defaultValue={settings.address || ""} />
         </div>
         <div className="field">
           <label htmlFor="opening-hours">Horarios</label>
@@ -76,7 +78,7 @@ export default async function SettingsPage({
           </div>
           <div className="field">
             <label htmlFor="currency">Moneda (ej. ARS, USD)</label>
-            <input id="currency" className="input" name="currency" minLength={3} maxLength={3} pattern="[A-Za-z]{3}" defaultValue={settings.currency} />
+            <input id="currency" className="input" name="currency" autoCapitalize="characters" minLength={3} maxLength={3} pattern="[A-Za-z]{3}" defaultValue={settings.currency} />
           </div>
         </div>
         <label className="checkbox">
@@ -87,7 +89,8 @@ export default async function SettingsPage({
           <input name="business_open" type="checkbox" defaultChecked={settings.business_open} />
           El negocio está abierto
         </label>
-        <button className="btn btn-primary">Guardar cambios</button>
+        <FormSubmitButton pendingText="Guardando configuración…" fullWidth>Guardar cambios</FormSubmitButton>
+        </PendingFormFields>
       </form>
     </div>
   );

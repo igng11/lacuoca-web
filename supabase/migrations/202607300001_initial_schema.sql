@@ -166,8 +166,8 @@ with check ((select private.is_admin()));
 
 insert into storage.buckets(id, name, public, file_size_limit, allowed_mime_types)
 values
-  ('products', 'products', true, 5242880, array['image/jpeg', 'image/png', 'image/webp']),
-  ('branding', 'branding', true, 5242880, array['image/jpeg', 'image/png', 'image/webp'])
+  ('products', 'products', true, 4194304, array['image/jpeg', 'image/png', 'image/webp']),
+  ('branding', 'branding', true, 4194304, array['image/jpeg', 'image/png', 'image/webp'])
 on conflict(id) do update
 set
   public = excluded.public,
