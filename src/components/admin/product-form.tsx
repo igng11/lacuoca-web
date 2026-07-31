@@ -1,0 +1,67 @@
+import type { Category, Product } from "@/types/database";
+import { deleteProduct, saveProduct } from "@/app/admin/actions";
+import { ConfirmButton } from "./confirm-button";
+import { ImageInput } from "./image-input";
+
+export function ProductForm({ product, categories }: { product?: Product; categories: Category[] }) {
+  const prefix = `product-${product?.id ?? "new"}`;
+  return (
+    <form action={saveProduct} className="stack" style={{ paddingTop: "1rem" }}>
+      <input type="hidden" name="id" value={product?.id || ""} />
+      <div className="form-grid two">
+        <div className="field">
+          <label htmlFor={`${prefix}-name`}>Nombre *</label>
+          <input id={`${prefix}-name`} className="input" name="name" defaultValue={product?.name} required />
+        </div>
+        <div className="field">
+          <label htmlFor={`${prefix}-category`}>Categoría *</label>
+          <select id={`${prefix}-category`} className="input" name="category_id" defaultValue={product?.category_id} required>
+            <option value="">Elegir…</option>
+            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+          </select>
+        </div>
+        <div className="field">
+          <label htmlFor={`${prefix}-price`}>Precio *</label>
+          <input id={`${prefix}-price`} className="input" name="price" type="number" min="0" step=".01" defaultValue={product?.price ?? 0} required />
+        </div>
+        <div className="field">
+          <label htmlFor={`${prefix}-order`}>Orden</label>
+          <input id={`${prefix}-order`} className="input" name="display_order" type="number" min="0" defaultValue={product?.display_order ?? 0} />
+        </div>
+      </div>
+      <div className="field">
+        <label htmlFor={`${prefix}-short-description`}>Descripción corta</label>
+        <input id={`${prefix}-short-description`} className="input" name="short_description" maxLength={180} defaultValue={product?.short_description || ""} />
+      </div>
+      <div className="field">
+        <label htmlFor={`${prefix}-description`}>Descripción completa</label>
+        <textarea id={`${prefix}-description`} className="input" name="description" rows={4} defaultValue={product?.description || ""} />
+      </div>
+      <ImageInput id={`${prefix}-image`} name="image" label="Foto del producto" current={product?.image_url} />
+      <div className="form-grid two">
+        {[
+          ["available", "Disponible", product?.available ?? true],
+          ["featured", "Destacado", product?.featured ?? false],
+          ["active", "Visible en el catálogo", product?.active ?? true],
+        ].map(([name, label, checked]) => (
+          <label className="checkbox" key={String(name)}>
+            <input name={String(name)} type="checkbox" defaultChecked={Boolean(checked)} />
+            {String(label)}
+          </label>
+        ))}
+      </div>
+      <button className="btn btn-primary" disabled={!categories.length}>
+        {categories.length ? "Guardar producto" : "Creá una categoría antes de guardar"}
+      </button>
+    </form>
+  );
+}
+
+export function ProductDeleteForm({ product }: { product: Product }) {
+  return (
+    <form id={`delete-${product.id}`} action={deleteProduct}>
+      <input type="hidden" name="id" value={product.id} />
+      <ConfirmButton />
+    </form>
+  );
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f3eadb"/>
+  <path d="M310 390c0-90 40-160 90-160s90 70 90 160" fill="#d59b5b"/>
+  <circle cx="400" cy="205" r="45" fill="#f8f1e7"/>
+  <path d="M270 410h260" stroke="#8d5524" stroke-width="18" stroke-linecap="round"/>
+  <text x="400" y="500" text-anchor="middle" font-family="sans-serif" font-size="28" fill="#6b4a2e">Imagen próximamente</text>
+</svg>

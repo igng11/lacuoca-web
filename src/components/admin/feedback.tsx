@@ -1,0 +1,1 @@
+export function Feedback({ok,error}:{ok?:string;error?:string}){if(!ok&&!error)return null;return <p className="notice" role={error?"alert":"status"} style={error?{background:"#fee2e2",color:"#991b1b"}:{background:"#dcfce7",color:"#166534"}}>{error||ok}</p>}

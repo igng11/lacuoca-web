@@ -1,0 +1,10 @@
+import { Feedback } from "@/components/admin/feedback";
+import { ProductDeleteForm, ProductForm } from "@/components/admin/product-form";
+import { getCategories, getProducts } from "@/services/catalog";
+export default async function ProductsPage({searchParams}:{searchParams:Promise<{ok?:string;error?:string;q?:string;category?:string;availability?:string}>}){
+ const p=await searchParams;const [categories,all]=await Promise.all([getCategories(true),getProducts({includeInactive:true})]);
+ const products=all.filter(x=>(!p.q||x.name.toLowerCase().includes(p.q.toLowerCase()))&&(!p.category||x.category_id===p.category)&&(!p.availability||(p.availability==="available"?x.available:!x.available)));
+ return <div className="stack"><div><span className="eyebrow">Catálogo</span><h1>Productos</h1></div><Feedback ok={p.ok} error={p.error}/><details className="card" style={{padding:"1rem"}}><summary style={{fontWeight:800,cursor:"pointer"}}>＋ Crear producto</summary><ProductForm categories={categories}/></details>
+ <form className="form-grid two"><input className="input" name="q" placeholder="Buscar por nombre…" defaultValue={p.q}/><select className="input" name="category" defaultValue={p.category}><option value="">Todas las categorías</option>{categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select><select className="input" name="availability" defaultValue={p.availability}><option value="">Cualquier disponibilidad</option><option value="available">Disponibles</option><option value="unavailable">No disponibles</option></select><button className="btn btn-soft">Filtrar</button></form>
+ <div className="admin-list">{products.map(x=><details className="card admin-item" key={x.id}><summary style={{cursor:"pointer"}}><strong>{x.name}</strong><div className="muted">{x.category?.name} · {x.available?"Disponible":"No disponible"}</div></summary><ProductForm product={x} categories={categories}/><ProductDeleteForm product={x}/></details>)}{!products.length&&<div className="empty">No hay productos que coincidan.</div>}</div></div>
+}
