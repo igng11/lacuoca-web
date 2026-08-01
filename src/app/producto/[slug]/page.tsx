@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/public/site-header";
+import { PublicFooter } from "@/components/public/public-footer";
 import { WhatsAppButton } from "@/components/public/whatsapp-button";
 import { formatPrice } from "@/lib/format";
 import { buildProductWhatsAppUrl } from "@/lib/whatsapp";
@@ -28,7 +29,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug:s
   const [product, settings] = await Promise.all([getProductBySlug((await params).slug), getSettings()]);
   if (!product) notFound();
   const wa = product.available && settings.business_open && settings.whatsapp_number ? buildProductWhatsAppUrl({ number:settings.whatsapp_number, productName:product.name, price:product.price, currency:settings.currency, showPrice:settings.show_prices }) : null;
-  return <><SiteHeader settings={settings} current="catalog"/><main className="container section product-page"><Link className="back-link" href="/catalogo">← Volver al catálogo</Link>
+  return <><SiteHeader settings={settings} current="catalog"/><main className="public-main"><div className="container section product-page"><Link className="back-link" href="/catalogo">← Volver al catálogo</Link>
     <div className="card product-detail">
       <div className={`product-image product-detail-image ${product.image_url ? "" : "is-placeholder"}`}><Image src={product.image_url || "/placeholder.svg"} alt={product.name} fill priority sizes="(max-width:700px) 100vw, 50vw"/></div>
       <div className="stack product-detail-content">
@@ -38,6 +39,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug:s
         {(product.description || product.short_description) && <p className="product-detail-description">{product.description || product.short_description}</p>}
         {wa ? <WhatsAppButton href={wa}/> : <p className="notice">Este producto no está disponible para consultas en este momento.</p>}
       </div>
-    </div>
-  </main></>;
+    </div></div>
+  </main><PublicFooter settings={settings}/></>;
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { LockKeyhole } from "lucide-react";
 import type { BusinessSettings } from "@/types/database";
 
 export function SiteHeader({ settings, current }: { settings: BusinessSettings; current?: "home" | "catalog" }) {
@@ -10,8 +11,9 @@ export function SiteHeader({ settings, current }: { settings: BusinessSettings; 
         <span className="brand-name">{settings.business_name}</span>
       </Link>
       <nav className="public-nav" aria-label="Navegación principal">
+        <Link className="nav-link nav-home" href="/" aria-current={current === "home" ? "page" : undefined}>Inicio</Link>
         <Link className="nav-link" href="/catalogo" aria-current={current === "catalog" ? "page" : undefined}>Catálogo</Link>
-        <Link className="btn btn-soft nav-admin" href="/admin">Admin</Link>
+        <Link className="nav-admin" href="/admin" aria-label="Ingresar al panel administrativo"><LockKeyhole size={16} aria-hidden="true" /><span>Administrar</span></Link>
       </nav>
     </div>
   </header>;
