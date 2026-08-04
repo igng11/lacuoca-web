@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, HeartHandshake, Leaf, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, HeartHandshake, Leaf } from "lucide-react";
+import heroBackground from "@/assets/img/hero.jpeg";
 import { ProductCard } from "@/components/public/product-card";
 import { PublicFooter } from "@/components/public/public-footer";
 import { SiteHeader } from "@/components/public/site-header";
@@ -18,46 +19,33 @@ export default async function HomePage() {
   const publishedCategories = categories.filter((category) => categoryIdsWithProducts.has(category.id));
   const featured = allProducts.filter((product) => product.featured);
   const visibleProducts = (featured.length ? featured : allProducts).slice(0, 6);
-  const heroProduct = allProducts.find((product) => product.image_url);
-  const heroImage = settings.hero_image_url || heroProduct?.image_url || "/placeholder.svg";
-  const usesPlaceholder = !settings.hero_image_url && !heroProduct?.image_url;
+  const heroDescription = settings.description || settings.hero_subtitle || provisionalAbout;
   const wa = settings.whatsapp_number ? buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message) : null;
 
   return <>
     <SiteHeader settings={settings} current="home" />
     <main className="public-main">
       <section className="hero-editorial">
-        <div className="container hero-editorial-grid">
+        <Image className="hero-editorial-image" src={heroBackground} alt="" fill priority sizes="100vw" />
+        <div className="container hero-editorial-inner">
           <div className="hero-copy">
             <div className="hero-kicker">
               <span className={`status-dot ${settings.business_open ? "is-open" : ""}`} aria-hidden="true" />
               {settings.business_open ? "Tomando pedidos" : "Consultas pausadas por el momento"}
             </div>
-            <p className="hero-brand">{settings.business_name}</p>
+            <p className="hero-brand">Nuestra manera de cocinar</p>
             <h1>{settings.hero_title}</h1>
-            {settings.hero_subtitle && <p className="hero-lede">{settings.hero_subtitle}</p>}
+            <p className="hero-lede">{heroDescription}</p>
+            <div className="hero-values" aria-label="Nuestros valores">
+              <span><Leaf size={18} aria-hidden="true" /> Ingredientes elegidos</span>
+              <span><HeartHandshake size={18} aria-hidden="true" /> Atención cercana</span>
+            </div>
             <div className="hero-actions">
               <Link href="/catalogo" className="btn btn-primary">Ver catálogo <ArrowRight size={18} aria-hidden="true" /></Link>
               {settings.business_open && <WhatsAppButton href={wa} label="Hacer una consulta" />}
             </div>
           </div>
-          <div className={`hero-media ${usesPlaceholder ? "uses-placeholder" : ""}`}>
-            <div className="hero-media-frame">
-              <Image src={heroImage} alt={usesPlaceholder ? "Imagen gastronómica próximamente" : `Propuesta gastronómica de ${settings.business_name}`} fill priority sizes="(max-width: 760px) 90vw, 48vw" />
-            </div>
-            <div className="hero-media-note"><UtensilsCrossed size={17} aria-hidden="true" /><span>Hecho con dedicación</span></div>
-          </div>
         </div>
-      </section>
-
-      <section className="container public-section category-section">
-        <div className="section-heading-row">
-          <div><span className="eyebrow">Para elegir</span><h2 className="section-title">Explorá por categoría</h2></div>
-          <Link className="section-link" href="/catalogo">Ver todo <ArrowRight size={17} aria-hidden="true" /></Link>
-        </div>
-        {publishedCategories.length
-          ? <div className="category-grid">{publishedCategories.slice(0, 6).map((category, index) => <Link className="category-tile" key={category.id} href={`/catalogo?categoria=${category.slug}`}><span>0{index + 1}</span><strong>{category.name}</strong><ArrowRight size={18} aria-hidden="true" /></Link>)}</div>
-          : <div className="empty public-empty"><h3>El menú está en preparación</h3><p>Muy pronto vas a poder recorrer nuestras categorías.</p></div>}
       </section>
 
       <section className="public-section featured-section">
@@ -72,18 +60,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container public-section story-section">
-        <div className="story-card">
-          <div className="story-copy">
-            <span className="eyebrow">Nuestra manera de cocinar</span>
-            <h2 className="section-title">Comida casera, simple y bien hecha</h2>
-            <p>{settings.description || provisionalAbout}</p>
-          </div>
-          <div className="story-values">
-            <div><Leaf size={22} aria-hidden="true" /><strong>Ingredientes elegidos</strong><span>Una selección cuidada para cada preparación.</span></div>
-            <div><HeartHandshake size={22} aria-hidden="true" /><strong>Atención cercana</strong><span>Consultas directas y simples por WhatsApp.</span></div>
-          </div>
+      <section className="container public-section category-section">
+        <div className="section-heading-row">
+          <div><span className="eyebrow">Para elegir</span><h2 className="section-title">Explorá por categoría</h2></div>
+          <Link className="section-link" href="/catalogo">Ver todo <ArrowRight size={17} aria-hidden="true" /></Link>
         </div>
+        {publishedCategories.length
+          ? <div className="category-grid">{publishedCategories.slice(0, 6).map((category, index) => <Link className="category-tile" key={category.id} href={`/catalogo?categoria=${category.slug}`}><span>0{index + 1}</span><strong>{category.name}</strong><ArrowRight size={18} aria-hidden="true" /></Link>)}</div>
+          : <div className="empty public-empty"><h3>El menú está en preparación</h3><p>Muy pronto vas a poder recorrer nuestras categorías.</p></div>}
       </section>
 
       <section className="container public-section cta-section">
