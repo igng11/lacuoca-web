@@ -203,27 +203,39 @@ export async function saveSettings(data: FormData) {
     show_prices: formBoolean(data, "show_prices"),
     business_open: formBoolean(data, "business_open"),
   });
-  if (!parsed.success) adminRedirect("/admin/configuracion", firstError(parsed.error), "error");
+  if (!parsed.success) adminRedirect("/admin", firstError(parsed.error), "error");
 
   const { data: current, error: currentError } = await supabase
     .from("business_settings")
-    .select("id,logo_url,hero_image_url")
+    .select("id,logo_url,hero_image_url,about_photo_1_url,about_photo_2_url,about_photo_3_url")
     .limit(1)
     .maybeSingle();
-  if (currentError) adminRedirect("/admin/configuracion", "No pudimos leer la configuración actual.", "error");
+  if (currentError) adminRedirect("/admin", "No pudimos leer la configuración actual.", "error");
 
   let logoUpload: UploadedImage | undefined;
   let heroUpload: UploadedImage | undefined;
+  let aboutPhotoUpload1: UploadedImage | undefined;
+  let aboutPhotoUpload2: UploadedImage | undefined;
+  let aboutPhotoUpload3: UploadedImage | undefined;
   try {
     const logoFile = data.get("logo");
     const heroFile = data.get("hero_image");
+    const aboutPhoto1File = data.get("about_photo_1");
+    const aboutPhoto2File = data.get("about_photo_2");
+    const aboutPhoto3File = data.get("about_photo_3");
     if (logoFile instanceof File && logoFile.size > 0) logoUpload = await uploadImage(logoFile, "branding");
     if (heroFile instanceof File && heroFile.size > 0) heroUpload = await uploadImage(heroFile, "branding");
+    if (aboutPhoto1File instanceof File && aboutPhoto1File.size > 0) aboutPhotoUpload1 = await uploadImage(aboutPhoto1File, "branding");
+    if (aboutPhoto2File instanceof File && aboutPhoto2File.size > 0) aboutPhotoUpload2 = await uploadImage(aboutPhoto2File, "branding");
+    if (aboutPhoto3File instanceof File && aboutPhoto3File.size > 0) aboutPhotoUpload3 = await uploadImage(aboutPhoto3File, "branding");
   } catch (error) {
     await discardUpload(logoUpload);
     await discardUpload(heroUpload);
+    await discardUpload(aboutPhotoUpload1);
+    await discardUpload(aboutPhotoUpload2);
+    await discardUpload(aboutPhotoUpload3);
     adminRedirect(
-      "/admin/configuracion",
+      "/admin",
       error instanceof Error ? error.message : "No pudimos subir la imagen. Revisá tu conexión e intentá nuevamente.",
       "error",
     );
@@ -235,6 +247,9 @@ export async function saveSettings(data: FormData) {
     instagram_url: parsed.data.instagram_url || null,
     logo_url: logoUpload?.publicUrl ?? (current?.logo_url as string | null | undefined) ?? null,
     hero_image_url: heroUpload?.publicUrl ?? (current?.hero_image_url as string | null | undefined) ?? null,
+    about_photo_1_url: aboutPhotoUpload1?.publicUrl ?? (current?.about_photo_1_url as string | null | undefined) ?? null,
+    about_photo_2_url: aboutPhotoUpload2?.publicUrl ?? (current?.about_photo_2_url as string | null | undefined) ?? null,
+    about_photo_3_url: aboutPhotoUpload3?.publicUrl ?? (current?.about_photo_3_url as string | null | undefined) ?? null,
   };
   const result = current
     ? await supabase.from("business_settings").update(payload).eq("id", current.id)
@@ -243,7 +258,10 @@ export async function saveSettings(data: FormData) {
   if (result.error) {
     await discardUpload(logoUpload);
     await discardUpload(heroUpload);
-    adminRedirect("/admin/configuracion", "No pudimos guardar la configuración. Intentá nuevamente.", "error");
+    await discardUpload(aboutPhotoUpload1);
+    await discardUpload(aboutPhotoUpload2);
+    await discardUpload(aboutPhotoUpload3);
+    adminRedirect("/admin", "No pudimos guardar la configuración. Intentá nuevamente.", "error");
   }
 
   if (logoUpload && current?.logo_url) {
@@ -252,6 +270,15 @@ export async function saveSettings(data: FormData) {
   if (heroUpload && current?.hero_image_url) {
     await discardPreviousImage("branding", current.hero_image_url as string);
   }
+  if (aboutPhotoUpload1 && current?.about_photo_1_url) {
+    await discardPreviousImage("branding", current.about_photo_1_url as string);
+  }
+  if (aboutPhotoUpload2 && current?.about_photo_2_url) {
+    await discardPreviousImage("branding", current.about_photo_2_url as string);
+  }
+  if (aboutPhotoUpload3 && current?.about_photo_3_url) {
+    await discardPreviousImage("branding", current.about_photo_3_url as string);
+  }
   revalidatePath("/", "layout");
-  adminRedirect("/admin/configuracion", "Información del negocio actualizada.");
+  adminRedirect("/admin", "Información del negocio actualizada.");
 }

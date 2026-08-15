@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
+import { RoughFrame } from "@/components/rough-frame";
+import { CARD_FRAME } from "@/data/rough-frame-path";
 import { buildProductWhatsAppUrl } from "@/lib/whatsapp";
 import type { BusinessSettings, Product } from "@/types/database";
 
@@ -23,15 +25,14 @@ export function ProductCard({ product, settings }: { product: Product; settings:
 
   return (
     <article className="card product-card">
+      <RoughFrame shape={CARD_FRAME} />
+      {product.featured && <span className="product-sticker">Recomendado!</span>}
       <Link className="product-card-media" href={`/producto/${product.slug}`} aria-label={product.name}>
-        <div className={`product-media ${product.image_url ? "" : "is-placeholder"}`}>
-          <Image src={product.image_url || "/placeholder.svg"} alt={product.name} fill sizes="(max-width: 700px) 100vw, 33vw" />
+        <div className="product-image-frame">
+          <div className={`product-media ${product.image_url ? "" : "is-placeholder"}`}>
+            <Image src={product.image_url || "/placeholder.svg"} alt={product.name} fill sizes="(max-width: 700px) 100vw, 33vw" />
+          </div>
         </div>
-        <span className="product-media-dots" aria-hidden="true">
-          <span className="is-active" />
-          <span />
-          <span />
-        </span>
       </Link>
 
       <div className="product-card-body">
@@ -44,7 +45,7 @@ export function ProductCard({ product, settings }: { product: Product; settings:
 
         {summary && <p className="product-description">{summary}</p>}
 
-        <div className="product-card-actions">
+        <div className={`product-card-actions${whatsappUrl ? "" : " single"}`}>
           {whatsappUrl ? (
             <>
               <a className="btn btn-primary" href={whatsappUrl} target="_blank" rel="noreferrer">

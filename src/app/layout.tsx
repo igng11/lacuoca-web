@@ -1,8 +1,50 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
-import { readableAccent, textColorOn } from "@/lib/color";
 import { getSiteUrl } from "@/lib/env";
 import { getSettings } from "@/services/catalog";
+
+const skinny = localFont({
+  src: "./fonts/DHDSkinny-Regular.otf",
+  variable: "--font-display",
+  display: "swap",
+});
+
+const austie = localFont({
+  src: "./fonts/Austie Bost Descriptions.ttf",
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const smooches = localFont({
+  src: "./fonts/SmoochesOfYou.ttf",
+  variable: "--font-script",
+  display: "swap",
+});
+
+const mess = localFont({
+  src: "./fonts/clean up your mess.ttf",
+  variable: "--font-mess",
+  display: "swap",
+});
+
+const mission = localFont({
+  src: "./fonts/missionpossible.ttf",
+  variable: "--font-mission",
+  display: "swap",
+});
+
+const fushia = localFont({
+  src: "./fonts/PotionFushia.ttf",
+  variable: "--font-fushia",
+  display: "swap",
+});
+
+const pot = localFont({
+  src: "./fonts/alittlepot.ttf",
+  variable: "--font-pot",
+  display: "swap",
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
@@ -15,13 +57,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const settings = await getSettings();
-  const style = {
-    "--primary": settings.primary_color,
-    "--secondary": settings.secondary_color,
-    "--primary-readable": readableAccent(settings.primary_color),
-    "--on-primary": textColorOn(settings.primary_color),
-    "--on-secondary": textColorOn(settings.secondary_color),
-  } as React.CSSProperties;
-  return <html lang="es"><body style={style}>{children}</body></html>;
+  const fonts = [skinny.variable, austie.variable, smooches.variable, mess.variable, mission.variable, fushia.variable, pot.variable].join(" ");
+  return <html lang="es" className={fonts}><body>{children}</body></html>;
 }

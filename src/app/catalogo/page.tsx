@@ -18,7 +18,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
   const selectedCategory = publishedCategories.find((category) => category.slug === categoria);
 
   return <>
-    <SiteHeader settings={settings} current="catalog" />
+    <SiteHeader current="catalog" settings={settings} />
     <main className="public-main catalog-main">
       <header className="catalog-hero">
         <div className="container catalog-hero-inner">

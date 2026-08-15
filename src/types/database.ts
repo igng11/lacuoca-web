@@ -18,6 +18,7 @@ export type BusinessSettings = {
   instagram_url: string | null; primary_color: string; secondary_color: string;
   hero_title: string; hero_subtitle: string | null; currency: string;
   show_prices: boolean; business_open: boolean; created_at: string; updated_at: string;
+  about_photo_1_url: string | null; about_photo_2_url: string | null; about_photo_3_url: string | null;
 };
 
 export type DashboardStats = {

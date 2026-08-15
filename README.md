@@ -173,7 +173,7 @@ Una restauración completa hacia otro proyecto también exige volver a configura
 
 ## Cambiar identidad y datos
 
-Entrar a `/admin/configuracion` para cambiar nombre, descripción, logo, imagen principal, WhatsApp, dirección, horarios, Instagram, colores, textos de portada, moneda, visibilidad de precios y estado abierto/cerrado. Productos y categorías se administran en sus secciones respectivas. Si no existe `business_settings`, la web sigue operativa con valores seguros de respaldo.
+Entrar a `/admin` y abrir "Información del negocio" para cambiar nombre, descripción, logo, imagen principal, WhatsApp, dirección, horarios, Instagram, colores, textos de portada, moneda, visibilidad de precios y estado abierto/cerrado. Productos y categorías se administran en sus secciones respectivas. Si no existe `business_settings`, la web sigue operativa con valores seguros de respaldo.
 
 ## Seguridad y límites
 

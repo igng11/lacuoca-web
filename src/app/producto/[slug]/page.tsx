@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import recurso4 from "@/assets/img/Recurso 4.svg";
 import { SiteHeader } from "@/components/public/site-header";
 import { PublicFooter } from "@/components/public/public-footer";
 import { WhatsAppButton } from "@/components/public/whatsapp-button";
@@ -29,8 +30,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug:s
   const [product, settings] = await Promise.all([getProductBySlug((await params).slug), getSettings()]);
   if (!product) notFound();
   const wa = product.available && settings.business_open && settings.whatsapp_number ? buildProductWhatsAppUrl({ number:settings.whatsapp_number, productName:product.name, price:product.price, currency:settings.currency, showPrice:settings.show_prices }) : null;
-  return <><SiteHeader settings={settings} current="catalog"/><main className="public-main"><div className="container section product-page"><Link className="back-link" href="/catalogo">← Volver al catálogo</Link>
+  return <><SiteHeader current="catalog" settings={settings}/><main className="public-main"><div className="container section product-page"><Link className="back-link" href="/catalogo">← Volver al catálogo</Link>
     <div className="card product-detail">
+      <div className="rough-frame" style={{ backgroundImage: `url("${recurso4.src}")` }} aria-hidden="true" />
       <div className={`product-image product-detail-image ${product.image_url ? "" : "is-placeholder"}`}><Image src={product.image_url || "/placeholder.svg"} alt={product.name} fill priority sizes="(max-width:700px) 100vw, 50vw"/></div>
       <div className="stack product-detail-content">
         <span className={`badge ${product.available?"available":"unavailable"}`}>{product.available?"Disponible":"No disponible"}</span>

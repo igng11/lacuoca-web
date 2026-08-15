@@ -1,81 +1,97 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, HeartHandshake, Leaf } from "lucide-react";
-import heroBackground from "@/assets/img/hero.jpeg";
+import { AboutCarousel } from "@/components/public/about-carousel";
+import { RoughFrame } from "@/components/rough-frame";
+import { ABOUT_FRAME } from "@/data/rough-frame-path";
+import { CommentsSection } from "@/components/public/comments-section";
+import { HeroArch } from "@/components/public/hero-arch";
+import recursoOlla from "@/assets/img/Recurso 11.png";
 import { ProductCard } from "@/components/public/product-card";
 import { PublicFooter } from "@/components/public/public-footer";
 import { SiteHeader } from "@/components/public/site-header";
 import { WhatsAppButton } from "@/components/public/whatsapp-button";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { getCategories, getProducts, getSettings } from "@/services/catalog";
+import { getProducts, getSettings } from "@/services/catalog";
 
 export const metadata = { alternates: { canonical: "/" } };
 
-const provisionalAbout = "Una propuesta de cocina cercana, con preparaciones pensadas para disfrutar en casa y compartir.";
-
 export default async function HomePage() {
-  const [settings, categories, allProducts] = await Promise.all([getSettings(), getCategories(), getProducts()]);
-  const categoryIdsWithProducts = new Set(allProducts.map((product) => product.category_id));
-  const publishedCategories = categories.filter((category) => categoryIdsWithProducts.has(category.id));
+  const [settings, allProducts] = await Promise.all([getSettings(), getProducts()]);
   const featured = allProducts.filter((product) => product.featured);
   const visibleProducts = (featured.length ? featured : allProducts).slice(0, 6);
-  const heroDescription = settings.description || settings.hero_subtitle || provisionalAbout;
+  const aboutPhotos = [settings.about_photo_1_url, settings.about_photo_2_url, settings.about_photo_3_url].filter((photo): photo is string => Boolean(photo));
   const wa = settings.whatsapp_number ? buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message) : null;
 
   return <>
-    <SiteHeader settings={settings} current="home" />
+    <SiteHeader current="home" settings={settings} />
     <main className="public-main">
-      <section className="hero-editorial">
-        <Image className="hero-editorial-image" src={heroBackground} alt="" fill priority sizes="100vw" />
-        <div className="container hero-editorial-inner">
+
+      {/* HERO */}
+      <section id="hero" className="hero-editorial">
+        <div className="container hero-grid">
           <div className="hero-copy">
             <div className="hero-kicker">
               <span className={`status-dot ${settings.business_open ? "is-open" : ""}`} aria-hidden="true" />
-              {settings.business_open ? "Tomando pedidos" : "Consultas pausadas por el momento"}
+              {settings.business_open ? "Hacé tu pedido" : "Consultas pausadas por el momento"}
             </div>
-            <p className="hero-brand">Nuestra manera de cocinar</p>
-            <h1>{settings.hero_title}</h1>
-            <p className="hero-lede">{heroDescription}</p>
-            <div className="hero-values" aria-label="Nuestros valores">
-              <span><Leaf size={18} aria-hidden="true" /> Ingredientes elegidos</span>
-              <span><HeartHandshake size={18} aria-hidden="true" /> Atención cercana</span>
-            </div>
+            <h1>Tu vianda diaria, con la frescura de lo recien hecho.</h1>
             <div className="hero-actions">
-              <Link href="/catalogo" className="btn btn-primary">Ver catálogo <ArrowRight size={18} aria-hidden="true" /></Link>
-              {settings.business_open && <WhatsAppButton href={wa} label="Hacer una consulta" />}
+              <Link href="/catalogo" className="btn btn-primary">Ver catálogo</Link>
+              {settings.business_open && wa && <WhatsAppButton href={wa} label="Hacer una consulta" />}
             </div>
+          </div>
+          <div className="hero-media-frame">
+            <HeroArch src={settings.hero_image_url || "/placeholder.svg"} alt={settings.business_name} />
           </div>
         </div>
       </section>
 
+      <div className="divider" />
+
+      {/* INTRO */}
+      <section id="recomendados" className="text-block">
+        <Image className="text-block-pot" src={recursoOlla} alt="" priority={false} />
+        <div className="curved-text-placeholder">Una primera selección</div>
+        <h2>Recomendados de la casa</h2>
+        <p>Preparaciones caseras para resolver una comida rica o compartir algo especial.</p>
+        <Link href="/catalogo" className="btn">Ver catálogo</Link>
+      </section>
+
+      {/* GALERÍA */}
       <section className="public-section featured-section">
         <div className="container">
-          <div className="section-heading-row">
-            <div><span className="eyebrow">Una primera selección</span><h2 className="section-title">Recomendados de la casa</h2></div>
-            <p className="section-intro">Preparaciones caseras para resolver una comida rica o compartir algo especial.</p>
-          </div>
           {visibleProducts.length
             ? <div className="product-grid">{visibleProducts.map((product) => <ProductCard key={product.id} product={product} settings={settings} />)}</div>
             : <div className="empty public-empty"><h3>Estamos preparando el catálogo</h3><p>Los primeros productos van a aparecer acá apenas estén publicados.</p></div>}
         </div>
       </section>
 
-      <section className="container public-section category-section">
-        <div className="section-heading-row">
-          <div><span className="eyebrow">Para elegir</span><h2 className="section-title">Explorá por categoría</h2></div>
-          <Link className="section-link" href="/catalogo">Ver todo <ArrowRight size={17} aria-hidden="true" /></Link>
+      <div className="divider blue" />
+
+      {/* NOSOTROS */}
+      <section id="nosotros" className="public-section about-section">
+        <div className="container about-grid">
+          <div className="about-media">
+            {aboutPhotos.length
+              ? <AboutCarousel photos={aboutPhotos} />
+              : <><Image src="/img/nos.jpg" alt="Nosotros" fill sizes="(max-width: 760px) 100vw, 50vw" /><RoughFrame shape={ABOUT_FRAME} /></>}
+          </div>
+          <div className="about-copy">
+            <h2 className="section-title about-title">De la olla a tu mesa</h2>
+            <p className="about-text about-foundation">Nacimos en 2014 con una olla humeante y muchas ganas de cocinar.</p>
+            <div className="about-story" tabIndex={0} aria-label="Nuestra historia">
+              <p className="about-text">Soy cocinera hace muchos años. Después de trabajar por Europa y por distintos lugares acá en Argentina, y ya siendo mamá, tuve ganas de volver a mis raíces: abrir un lugar en Florida, mi barrio de toda la vida. Muchos me sugirieron otros lugares, pero para mí el barrio siempre fue el punto de partida.</p>
+              <p className="about-text">Después de buscar mucho, encontré este local que durante años había sido una casa de empanadas. Apenas entré me enamoré: una casa luminosa, ventilada, con esa calidez que pocos locales tienen. Fue en marzo de 2014 cuando el lugar pasó a ser mío, y desde entonces estamos en las callecitas tranquilas del barrio, vendiéndole a los vecinos, a oficinas y a quienes se van cruzando en el camino. Por el camino tuve socios que me acompañaron —Guille primero, Adri después— y hoy sigo sola, con toda mi alma puesta en esto.</p>
+              <p className="about-text">El nombre, La Cuoca, viene de mi apellido de origen italiano, Cuocante. Quería algo que me representara de verdad, sin caer en los clásicos &ldquo;Casa de...&rdquo; o &ldquo;Taller de...&rdquo;. Algunos todavía me dicen &ldquo;La Cuca&rdquo; o &ldquo;La Coca&rdquo;, y hasta descubrí después que a dos cuadras hay un kiosco llamado El Cuco. Cosas del barrio.</p>
+            </div>
+          </div>
         </div>
-        {publishedCategories.length
-          ? <div className="category-grid">{publishedCategories.slice(0, 6).map((category, index) => <Link className="category-tile" key={category.id} href={`/catalogo?categoria=${category.slug}`}><span>0{index + 1}</span><strong>{category.name}</strong><ArrowRight size={18} aria-hidden="true" /></Link>)}</div>
-          : <div className="empty public-empty"><h3>El menú está en preparación</h3><p>Muy pronto vas a poder recorrer nuestras categorías.</p></div>}
       </section>
 
-      <section className="container public-section cta-section">
-        <div className="cta-card">
-          <div><span className="eyebrow">¿Ya sabés qué elegir?</span><h2>Conocé el menú y consultanos cuando quieras.</h2></div>
-          <div className="cta-actions"><Link href="/catalogo" className="btn btn-primary">Explorar catálogo</Link>{settings.business_open && <WhatsAppButton href={wa} />}</div>
-        </div>
-      </section>
+      <div className="divider blue" />
+
+      {/* COMENTARIOS */}
+      <CommentsSection />
     </main>
     <PublicFooter settings={settings} />
   </>;

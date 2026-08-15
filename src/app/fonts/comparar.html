@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparador de fuentes TTF</title>
+  <style>
+    /* ============================================
+       📁 TODAS TUS FUENTES CARGADAS
+       ============================================ */
+    @font-face {
+      font-family: 'Addis Ababa';
+      src: url('./Addis Ababa.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'alittlepot';
+      src: url('./alittlepot.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Austie Bost Descriptions';
+      src: url('./Austie Bost Descriptions.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'clean up your mess';
+      src: url('./clean up your mess.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'DHDSkinny';
+      src: url('./DHDSkinny-Regular.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'missionpossible';
+      src: url('./missionpossible.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'PotionFushia';
+      src: url('./PotionFushia.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'SmoochesOfYou';
+      src: url('./SmoochesOfYou.ttf') format('truetype');
+    }
+    /* ============================================ */
+
+    body {
+      background: #f0ede7;
+      font-family: sans-serif;
+      padding: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      font-size: 2.2rem;
+    }
+
+    .note {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      background: #e8e3da;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+    }
+
+    .note code {
+      background: #d5cfc4;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-left: 6px solid #ccc;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-left-color: #1a1a1a;
+    }
+
+    .card .label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .card .label h2 {
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .card .label .file {
+      font-size: 0.75rem;
+      background: #f0ede7;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      color: #555;
+      font-family: monospace;
+    }
+
+    .sample {
+      font-size: 2rem;
+      line-height: 1.6;
+      letter-spacing: 0.4px;
+    }
+
+    .sample .small {
+      font-size: 1.2rem;
+      color: #666;
+      display: block;
+      margin-top: 0.2rem;
+    }
+
+    .sample .numbers {
+      font-size: 1.6rem;
+      color: #444;
+    }
+
+    /* ============================================
+       🎨 CÓDIGO DE COLOR PARA CADA TARJETA
+       ============================================ */
+    .card:nth-child(2) { border-left-color: #e74c3c; }
+    .card:nth-child(3) { border-left-color: #3498db; }
+    .card:nth-child(4) { border-left-color: #2ecc71; }
+    .card:nth-child(5) { border-left-color: #f39c12; }
+    .card:nth-child(6) { border-left-color: #9b59b6; }
+    .card:nth-child(7) { border-left-color: #1abc9c; }
+    .card:nth-child(8) { border-left-color: #e67e22; }
+    .card:nth-child(9) { border-left-color: #e84393; }
+
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      .card { padding: 1.2rem; }
+      .sample { font-size: 1.5rem; }
+      .sample .small { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔤 Comparador de fuentes</h1>
+  <div class="note">
+    📁 Coloca este archivo HTML en la <strong>misma carpeta</strong> donde tienes todos los archivos <code>.ttf</code> y <code>.otf</code>.<br />
+    ✅ Si los archivos están en otra carpeta, cambia la ruta en <code>src: './carpeta/nombre.ttf'</code>
+  </div>
+
+  <!-- ============================================
+       📝 CADA FUENTE EN SU TARJETA
+       ============================================ -->
+
+  <!-- 1. Addis Ababa -->
+  <div class="card">
+    <div class="label">
+      <h2>🌍 Addis Ababa</h2>
+      <span class="file">Addis Ababa.ttf</span>
+    </div>
+    <div class="sample" style="font-family: 'Addis Ababa', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- 2. alittlepot -->
+  <div class="card">
+    <div class="label">
+      <h2>🍯 alittlepot</h2>
+      <span class="file">alittlepot.ttf</span>
+    </div>
+    <div class="sample" style="font-family: 'alittlepot', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- 3. Austie Bost Descriptions -->
+  <div class="card">
+    <div class="label">
+      <h2>✏️ Austie Bost Descriptions</h2>
+      <span class="file">Austie Bost Descriptions.ttf</span>
+    </div>
+    <div class="sample" style="font-family: 'Austie Bost Descriptions', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- 4. clean up your mess -->
+  <div class="card">
+    <div class="label">
+      <h2>🧹 clean up your mess</h2>
+      <span class="file">clean up your mess.ttf</span>
+    </div>
+    <div class="sample" style="font-family: 'clean up your mess', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- 5. DHDSkinny (OTF) -->
+  <div class="card">
+    <div class="label">
+      <h2>🦴 DHDSkinny</h2>
+      <span class="file">DHDSkinny-Regular.otf</span>
+    </div>
+    <div class="sample" style="font-family: 'DHDSkinny', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- 6. missionpossible -->
+  <div class="card">
+    <div class="label">
+      <h2>🎯 missionpossible</h2>
+      <span class="file">missionpossible.ttf</span>
+    </div>
+    <div class="sample" style="font-family: 'missionpossible', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- 7. PotionFushia -->
+  <div class="card">
+    <div class="label">
+      <h2>🧪 PotionFushia</h2>
+      <span class="file">PotionFushia.ttf</span>
+    </div>
+    <div class="sample" style="font-family: 'PotionFushia', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- 8. SmoochesOfYou -->
+  <div class="card">
+    <div class="label">
+      <h2>💋 SmoochesOfYou</h2>
+      <span class="file">SmoochesOfYou.ttf</span>
+    </div>
+    <div class="sample" style="font-family: 'SmoochesOfYou', sans-serif;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+      abcdefghijklmnopqrstuvwxyz<br />
+      <span class="numbers">0123456789 ¡¿? !@#$%</span>
+      <span class="small">El veloz murciélago hindú comía feliz cardillo y kiwi.</span>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+
+  <div style="margin-top: 2rem; font-size: 0.8rem; color: #777; text-align: center; border-top: 1px solid #ddd; padding-top: 1.5rem;">
+    🔍 8 fuentes cargadas · Abre este HTML en tu navegador para compararlas
+  </div>
+
+</body>
+</html>

@@ -11,6 +11,7 @@ export const defaultSettings: BusinessSettings = {
   instagram_url: null, primary_color: "#B45309", secondary_color: "#14532D",
   hero_title: "Sabores hechos con cariño", hero_subtitle: "Un catálogo simple para elegir lo que más te gusta.",
   currency: "ARS", show_prices: true, business_open: true, created_at: "", updated_at: "",
+  about_photo_1_url: null, about_photo_2_url: null, about_photo_3_url: null,
 };
 
 function sanitizeSettings(settings: BusinessSettings): BusinessSettings {
@@ -35,6 +36,9 @@ function sanitizeSettings(settings: BusinessSettings): BusinessSettings {
     whatsapp_number: settings.whatsapp_number ? normalizeWhatsAppNumber(settings.whatsapp_number) : null,
     logo_url: storagePathFromPublicUrl(settings.logo_url, "branding") ? settings.logo_url : null,
     hero_image_url: storagePathFromPublicUrl(settings.hero_image_url, "branding") ? settings.hero_image_url : null,
+    about_photo_1_url: storagePathFromPublicUrl(settings.about_photo_1_url, "branding") ? settings.about_photo_1_url : null,
+    about_photo_2_url: storagePathFromPublicUrl(settings.about_photo_2_url, "branding") ? settings.about_photo_2_url : null,
+    about_photo_3_url: storagePathFromPublicUrl(settings.about_photo_3_url, "branding") ? settings.about_photo_3_url : null,
   };
 }
 
