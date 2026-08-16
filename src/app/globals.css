@@ -213,8 +213,10 @@ button, input, textarea, select { font: inherit; }
   .public-header::after, .catalog-hero::after, .public-footer::before { width: min(960px, calc(100% - 1.5rem)); }
   .divider { width: min(960px, calc(100% - 1.5rem)); }
   .brand { gap:.3rem; padding:.1rem .25rem; }
-  .brand-logo-wrap { width:97px; height:40px; }
-  .brand .brand-logo { max-height:35px; }
+  /* Ancho generoso (igual criterio que en desktop): un logo apaisado, dentro
+     de una caja angosta, queda acotado por el ancho y se ve chico aunque la
+     caja tenga alto de sobra (contain no usa toda la altura disponible). */
+  .brand-logo-wrap { width:170px; height:46px; }
   .brand-name { font-size:.9rem; }
   .public-nav { gap:.05rem; }
   .nav-link { min-height:40px; padding-inline:.5rem; font-size:.82rem; gap:.3rem; }
