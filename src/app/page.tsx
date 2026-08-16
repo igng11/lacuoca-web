@@ -54,10 +54,7 @@ export default async function HomePage() {
         <div className="curved-text-placeholder">Una primera selección</div>
         <h2>Recomendados de la casa</h2>
         <p>Preparaciones caseras para resolver una comida rica o compartir algo especial.</p>
-        <Link href="/catalogo" className="btn">Ver catálogo</Link>
       </section>
-
-      <div className="divider" />
 
       {/* GALERÍA */}
       <section className="public-section featured-section">
