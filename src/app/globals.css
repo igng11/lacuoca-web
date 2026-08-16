@@ -186,11 +186,17 @@ button, input, textarea, select { font: inherit; }
 .feedback-success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
 .feedback-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 .orientation { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border-radius: 1rem; background: #fff7d6; color: #684d07; }
-.image-field { align-content: start; }
+/* --font-mission (más clara/funcional) en vez de la Fushia cursiva del body,
+   que acá cuesta más leer para nombres de archivo y ayudas cortas. */
+.image-field { align-content: start; gap: .6rem; padding: 1.1rem; border: 1px solid var(--public-line); border-radius: 1rem; background: var(--cream); font-family: var(--font-mission); }
 .image-preview { position: relative; width: min(100%, 240px); aspect-ratio: 3 / 2; overflow: hidden; border-radius: .8rem; background: var(--cream); border: 1px solid var(--public-line); }
 .image-preview img { object-fit: cover; }
-.file-input { padding: .55rem; }
-.file-input::file-selector-button { min-height: 36px; margin-right: .7rem; padding: .45rem .7rem; border: 0; border-radius: 999px; background: var(--cream); font-weight: 700; cursor: pointer; }
+.image-upload-row { display: flex; }
+.image-upload-btn { min-height: 44px; gap: .5rem; }
+/* El input real sigue existiendo (enfocable por teclado, dispara el picker de
+   archivos), pero visualmente lo reemplaza el botón .image-upload-btn de arriba. */
+.image-upload-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.image-upload-btn:has(+ .image-upload-input:focus-visible) { outline: 3px solid color-mix(in srgb, var(--blue) 45%, white); outline-offset: 3px; }
 .selected-file { display: flex; align-items: center; justify-content: space-between; gap: .7rem; flex-wrap: wrap; padding: .65rem .75rem; border-radius: .7rem; background: var(--cream); overflow-wrap: anywhere; }
 .text-button { color: var(--red); background: none; border: 0; padding: .25rem 0; font-weight: 750; text-decoration: underline; text-underline-offset: .2rem; cursor: pointer; }
 
@@ -203,11 +209,8 @@ button, input, textarea, select { font: inherit; }
 @media (max-width: 520px) {
   .container { width:min(var(--content-max), calc(100% - 1.5rem)); }
   .public-header-inner { width:min(960px, calc(100% - 1.5rem)); gap:.35rem; min-height: 60px; }
-  .featured-section .container, .footer-grid, .footer-bottom { width: min(960px, calc(100% - 1.5rem)); }
-  .featured-section::before, .featured-section::after,
-  .about-section::before, .about-section::after,
-  .public-header::after,
-  .catalog-hero::after, .public-footer::before { width: min(960px, calc(100% - 1.5rem)); }
+  .featured-section .container, .comments-section .container, .footer-grid, .footer-bottom { width: min(960px, calc(100% - 1.5rem)); }
+  .public-header::after, .catalog-hero::after, .public-footer::before { width: min(960px, calc(100% - 1.5rem)); }
   .divider { width: min(960px, calc(100% - 1.5rem)); }
   .brand { gap:.3rem; padding:.1rem .25rem; }
   .brand-logo-wrap { width:97px; height:40px; }
@@ -248,6 +251,26 @@ button, input, textarea, select { font: inherit; }
 .nav-link[aria-current="page"] { color: var(--red); background: transparent; }
 .nav-link[aria-current="page"]::after { background: var(--red); }
 .nav-whatsapp { color: var(--blue); }
+.nav-toggle { display: none; }
+
+/* Con 5 links (Catálogo, Recomendados, Nosotros, Opiniones, Contacto) no hay
+   forma de que entren en una fila en un celular sin hacerse ilegibles; en vez
+   de seguir ocultando links (lo que dejaba pantallas chicas sin acceso a la
+   mayoría de las secciones), el nav se colapsa a un menú desplegable. */
+@media (max-width: 700px) {
+  .nav-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 999px; background: transparent; color: var(--red); cursor: pointer; }
+  .public-header-inner { position: relative; }
+  .public-nav {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 25;
+    flex-direction: column; align-items: stretch; gap: 0;
+    max-height: 0; overflow: hidden; opacity: 0;
+    background: var(--cream); border-bottom: 1px solid var(--public-line);
+    transition: max-height .25s ease, opacity .2s ease;
+  }
+  .public-nav.is-open { max-height: 22rem; opacity: 1; padding-block: .5rem; }
+  #public-nav .nav-link { justify-content: center; width: 100%; min-height: 48px; border-radius: 0; font-size: 1rem; padding-inline: .5rem; }
+  #public-nav .nav-link[aria-current="page"]::after { display: none; }
+}
 
 /* --- HERO --- */
 /* El header público es sticky: sin esto, el scroll-anchor deja el inicio de
@@ -270,8 +293,10 @@ button, input, textarea, select { font: inherit; }
 .hero-copy .btn-secondary { color: var(--blue); border: 1px solid var(--blue); background: transparent; }
 
 /* --- DIVIDERS --- */
-.divider { height: 1px; background-color: var(--red); width: min(960px, calc(100% - 2rem)); margin-inline: auto; opacity: 0.3; }
-.divider.blue { background-color: var(--blue); }
+/* Un solo color para todos los separadores del sitio (mismo --public-line que
+   usan header/footer/catalog-hero) — antes alternaba rojo y celeste entre
+   secciones sin ningún criterio, y algunos bordes tenían hasta 3 líneas apiladas. */
+.divider { height: 1px; background-color: var(--public-line); width: min(960px, calc(100% - 2rem)); margin-inline: auto; }
 
 /* --- INTRO (text-block) --- */
 .text-block { text-align: center; padding: 5rem 2rem; max-width: 800px; margin: 0 auto; }
@@ -283,14 +308,9 @@ button, input, textarea, select { font: inherit; }
 .text-block .btn { font-size: 1.2rem; }
 
 /* --- GALERÍA (productos) --- */
+/* Estas secciones ya quedan separadas por el <div className="divider"> explícito
+   entre secciones en page.tsx — un ::before/::after acá duplicaba la línea. */
 .featured-section { position: relative; }
-.featured-section::before, .featured-section::after,
-.about-section::before, .about-section::after {
-  content: ""; position: absolute; left: 0; right: 0; margin-inline: auto;
-  width: min(960px, calc(100% - 2rem)); height: 1px; background: var(--public-line);
-}
-.featured-section::before, .about-section::before { top: 0; }
-.featured-section::after, .about-section::after { bottom: 0; }
 .gallery-grid, .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; row-gap: 2.4rem; }
 .gallery-card, .product-card { display: flex; flex-direction: column; border: 0; position: relative; overflow: visible; background: var(--cream); transition: transform .2s ease-out; transform: scale(.9); }
 .gallery-card img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform .3s ease; border-radius: 12px 12px 0 0; }
@@ -379,10 +399,17 @@ button, input, textarea, select { font: inherit; }
 .comments-heading .section-intro { margin: 0 auto; }
 .comments-google-link { display: flex; width: fit-content; align-items: center; gap: .4rem; margin: 1.5rem 0 0 auto; color: var(--blue); font-weight: 750; font-family: var(--font-mission); text-transform: uppercase; letter-spacing: 1px; font-size: .85rem; }
 .comments-google-link:hover { color: var(--red); }
-.comments-carousel { position: relative; max-width: 1100px; margin-inline: auto; }
+.comments-carousel { position: relative; max-width: 960px; margin-inline: auto; }
 .comments-track { display: flex; gap: 1.1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: .3rem .2rem 1rem; scrollbar-width: none; }
 .comments-track::-webkit-scrollbar { display: none; }
-.comments-track .review-card { flex: 0 0 clamp(240px, 78vw, 320px); scroll-snap-align: start; }
+.comments-track .review-card { flex: 0 0 clamp(200px, 60vw, 260px); scroll-snap-align: start; }
+/* A un ancho fijo en px, cuánto se ve de la card siguiente depende de cuánto
+   sobra al encajar las completas — con 260px caía casi a la mitad. Con
+   porcentaje del contenedor, siempre entran ~3 completas y un asomo chico
+   y consistente de la 4ta, sea cual sea el ancho del carrusel. */
+@media (min-width: 700px) {
+  .comments-track .review-card { flex-basis: calc((100% - 2 * 1.1rem) / 3.15); }
+}
 .comments-nav { display: flex; justify-content: center; gap: .7rem; }
 .comments-arrow { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 999px; background: transparent; color: var(--blue); cursor: pointer; transition: background .2s ease, color .2s ease; }
 .comments-arrow:hover { background: var(--blue); color: var(--cream); }
@@ -420,7 +447,7 @@ button, input, textarea, select { font: inherit; }
 .catalog-hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; margin-inline: auto; width: min(960px, calc(100% - 2rem)); height: 1px; background: var(--public-line); }
 /* .container solo (1200px) queda más ancho que el límite de 960px que usa el
    resto del sitio (hero, header, divisores, footer) — mismo ajuste ya hecho ahí. */
-.catalog-hero-inner, .catalog-content { max-width: 960px; }
+.catalog-hero-inner, .catalog-content, .comments-section .container { max-width: 960px; }
 .catalog-hero .page-title { max-width: 13ch; margin: .65rem auto 1rem; font-family: var(--font-title); font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 500; letter-spacing: -.04em; color: var(--blue); }
 .catalog-hero p { max-width: 36rem; margin: 0 auto; color: var(--public-muted); line-height: 1.65; }
 .catalog-content { padding-block: clamp(2rem, 6vw, 5rem); }
@@ -475,10 +502,6 @@ button, input, textarea, select { font: inherit; }
 
 @media (max-width: 430px) {
   .public-header-inner { min-height: 56px; }
-  /* Recomendados/Opiniones/Nosotros son scrolls dentro de la misma página: en
-     pantallas muy angostas se sacan del header para que Catálogo y Contacto
-     entren sin apretarse. Siguen alcanzables scrolleando la home. */
-  .nav-recomendados, .nav-opiniones, .nav-nosotros { display: none; }
   .hero-kicker { font-size: .72rem; }
   .public-section { padding-block: 3.5rem; }
   .product-grid, .gallery-grid { grid-template-columns: 1fr; }

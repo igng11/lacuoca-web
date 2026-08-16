@@ -57,6 +57,8 @@ export default async function HomePage() {
         <Link href="/catalogo" className="btn">Ver catálogo</Link>
       </section>
 
+      <div className="divider" />
+
       {/* GALERÍA */}
       <section className="public-section featured-section">
         <div className="container">
@@ -66,7 +68,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="divider blue" />
+      <div className="divider" />
 
       {/* NOSOTROS */}
       <section id="nosotros" className="public-section about-section">
@@ -88,7 +90,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="divider blue" />
+      <div className="divider" />
 
       {/* COMENTARIOS */}
       <CommentsSection />

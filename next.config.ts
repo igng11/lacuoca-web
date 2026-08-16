@@ -30,6 +30,12 @@ const nextConfig: NextConfig = {
 
   images: {
     remotePatterns,
+    // El logo acepta SVG (ver lib/storage.ts sanitizeSvg). Next bloquea SVG en
+    // su optimizador por defecto porque puede traer <script> embebido; esta
+    // CSP es la mitigación que la propia documentación de Next recomienda:
+    // sirve el SVG en un contexto que no puede ejecutar scripts ni objetos.
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   experimental: {

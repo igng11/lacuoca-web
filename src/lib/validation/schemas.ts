@@ -34,9 +34,6 @@ export const settingsSchema = z.object({
   whatsapp_number: optionalWhatsApp,
   whatsapp_default_message: requiredText.max(300), address: z.string().trim().max(200),
   opening_hours: z.string().trim().max(300), instagram_url: optionalHttpUrl,
-  primary_color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Usá un color hexadecimal."),
-  secondary_color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Usá un color hexadecimal."),
   hero_title: requiredText.max(120), hero_subtitle: z.string().trim().max(200),
-  currency: z.string().trim().regex(/^[A-Z]{3}$/, "Usá el código de moneda de 3 letras."),
   show_prices: z.boolean(), business_open: z.boolean(),
 });

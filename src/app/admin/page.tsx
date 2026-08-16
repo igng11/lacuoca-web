@@ -108,7 +108,7 @@ export default async function AdminPage({
               <input id="hero-subtitle" className="input" name="hero_subtitle" defaultValue={settings.hero_subtitle || ""} />
             </div>
             <div className="form-grid two">
-              <ImageInput name="logo" label="Logo (se muestra en el menú de arriba)" current={settings.logo_url} />
+              <ImageInput name="logo" label="Logo (se muestra en el menú de arriba)" current={settings.logo_url} allowSvg />
               <ImageInput name="hero_image" label="Portada (fondo grande del inicio)" current={settings.hero_image_url} />
             </div>
             <h3>Fotos de la sección &ldquo;Nosotros&rdquo;</h3>
@@ -118,21 +118,7 @@ export default async function AdminPage({
               <ImageInput name="about_photo_3" label="Foto 3" current={settings.about_photo_3_url} />
             </div>
 
-            <h2>Apariencia y venta</h2>
-            <div className="form-grid two">
-              <div className="field">
-                <label htmlFor="primary-color">Color principal</label>
-                <input id="primary-color" className="input" name="primary_color" type="color" defaultValue={settings.primary_color} />
-              </div>
-              <div className="field">
-                <label htmlFor="secondary-color">Color secundario</label>
-                <input id="secondary-color" className="input" name="secondary_color" type="color" defaultValue={settings.secondary_color} />
-              </div>
-              <div className="field">
-                <label htmlFor="currency">Moneda (ej. ARS, USD)</label>
-                <input id="currency" className="input" name="currency" autoCapitalize="characters" minLength={3} maxLength={3} pattern="[A-Za-z]{3}" defaultValue={settings.currency} />
-              </div>
-            </div>
+            <h2>Venta</h2>
             <label className="checkbox">
               <input name="show_prices" type="checkbox" defaultChecked={settings.show_prices} />
               Mostrar precios

@@ -195,11 +195,8 @@ export async function saveSettings(data: FormData) {
     address: formString(data, "address"),
     opening_hours: formString(data, "opening_hours"),
     instagram_url: formString(data, "instagram_url"),
-    primary_color: formString(data, "primary_color"),
-    secondary_color: formString(data, "secondary_color"),
     hero_title: formString(data, "hero_title"),
     hero_subtitle: formString(data, "hero_subtitle"),
-    currency: formString(data, "currency").toUpperCase(),
     show_prices: formBoolean(data, "show_prices"),
     business_open: formBoolean(data, "business_open"),
   });
@@ -223,7 +220,7 @@ export async function saveSettings(data: FormData) {
     const aboutPhoto1File = data.get("about_photo_1");
     const aboutPhoto2File = data.get("about_photo_2");
     const aboutPhoto3File = data.get("about_photo_3");
-    if (logoFile instanceof File && logoFile.size > 0) logoUpload = await uploadImage(logoFile, "branding");
+    if (logoFile instanceof File && logoFile.size > 0) logoUpload = await uploadImage(logoFile, "branding", { allowSvg: true });
     if (heroFile instanceof File && heroFile.size > 0) heroUpload = await uploadImage(heroFile, "branding");
     if (aboutPhoto1File instanceof File && aboutPhoto1File.size > 0) aboutPhotoUpload1 = await uploadImage(aboutPhoto1File, "branding");
     if (aboutPhoto2File instanceof File && aboutPhoto2File.size > 0) aboutPhotoUpload2 = await uploadImage(aboutPhoto2File, "branding");

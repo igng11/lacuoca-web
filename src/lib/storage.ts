@@ -5,6 +5,7 @@ const EXTENSIONS: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
+  "image/svg+xml": "svg",
 };
 
 export type ImageBucket = "products" | "branding";
@@ -25,19 +26,47 @@ export function detectImageMime(bytes: Uint8Array) {
   return null;
 }
 
-export async function validateImageFile(file: File) {
-  const selectionError = imageSelectionError(file);
+// SVG es texto, no tiene firma binaria: alcanza con buscar la etiqueta <svg>
+// cerca del principio (Illustrator suele anteponer el prólogo XML, un DOCTYPE
+// y un comentario "Generator:" antes de la etiqueta real).
+function looksLikeSvg(bytes: Uint8Array) {
+  const head = new TextDecoder("utf-8", { fatal: false }).decode(bytes.slice(0, 1000));
+  return /<svg[\s>]/i.test(head);
+}
+
+// Los SVG de Illustrator no traen scripts, pero el archivo sirve para el logo
+// público del sitio: cualquier <script>, atributo on* o href="javascript:"
+// que llegue a colarse se ejecutaría en el navegador de cada visitante. Esto
+// es una limpieza básica por regex, no un sanitizador XML completo — alcanza
+// para el caso real (un export de Illustrator), no para contenido adversarial.
+function sanitizeSvg(svg: string): string {
+  return svg
+    .replace(/<script[\s\S]*?<\/script\s*>/gi, "")
+    .replace(/<foreignObject[\s\S]*?<\/foreignObject\s*>/gi, "")
+    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/((?:xlink:)?href)\s*=\s*("|')\s*javascript:[^"']*\2/gi, "$1=$2#$2");
+}
+
+export async function validateImageFile(file: File, allowSvg = false) {
+  const selectionError = imageSelectionError(file, allowSvg);
   if (selectionError) throw new Error(selectionError);
+  if (allowSvg && file.type === "image/svg+xml") {
+    if (!looksLikeSvg(new Uint8Array(await file.arrayBuffer()))) {
+      throw new Error("El archivo seleccionado no es un SVG válido.");
+    }
+    return;
+  }
   const detectedType = detectImageMime(new Uint8Array(await file.arrayBuffer()));
   if (detectedType !== file.type) throw new Error("El archivo seleccionado no es una imagen válida.");
 }
 
-export async function uploadImage(file: File, bucket: ImageBucket): Promise<UploadedImage> {
-  await validateImageFile(file);
+export async function uploadImage(file: File, bucket: ImageBucket, options: { allowSvg?: boolean } = {}): Promise<UploadedImage> {
+  await validateImageFile(file, options.allowSvg);
   const extension = EXTENSIONS[file.type];
   const path = `${crypto.randomUUID()}.${extension}`;
   const supabase = await createClient();
-  const { error } = await supabase.storage.from(bucket).upload(path, file, { contentType: file.type });
+  const body = file.type === "image/svg+xml" ? new Blob([sanitizeSvg(await file.text())], { type: file.type }) : file;
+  const { error } = await supabase.storage.from(bucket).upload(path, body, { contentType: file.type });
   if (error) throw new Error("No pudimos subir la imagen. Revisá tu conexión e intentá nuevamente.");
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
   return { bucket, path, publicUrl: data.publicUrl };
