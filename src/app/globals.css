@@ -490,8 +490,10 @@ button, input, textarea, select { font: inherit; }
   .hero-grid { display: flex; flex-direction: column; align-items: center; text-align: center; height: 100%; gap: clamp(.75rem, 2.5vh, 1.25rem); }
   /* display:contents saca la caja de .hero-copy para poder reordenar sus
      hijos (kicker, título, botones) intercalados con la imagen: en mobile va
-     kicker → imagen → título → botones, no el orden del desktop. */
-  .hero-copy { display: contents; }
+     kicker → imagen → título → botones, no el orden del desktop. El
+     text-align:left de la regla de escritorio se hereda a los hijos aunque
+     la caja desaparezca, así que hay que pisarlo acá. */
+  .hero-copy { display: contents; text-align: center; }
   .hero-kicker { order: 1; }
   .hero-media-frame { order: 2; flex: 1 1 auto; min-height: 0; width: 100%; margin: 0; display: flex; align-items: center; justify-content: center; }
   .hero-copy h1 { order: 3; padding-right: 0; font-size: clamp(1.5rem, 6vw, 2.35rem); }
