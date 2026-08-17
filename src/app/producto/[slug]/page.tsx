@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import recurso4 from "@/assets/img/Recurso 4.svg";
+import { AddToCartButton } from "@/components/public/add-to-cart-button";
 import { SiteHeader } from "@/components/public/site-header";
 import { PublicFooter } from "@/components/public/public-footer";
-import { WhatsAppButton } from "@/components/public/whatsapp-button";
+import { RoughFrame } from "@/components/rough-frame";
+import { CARD_FRAME } from "@/data/rough-frame-path";
 import { formatPrice } from "@/lib/format";
-import { buildProductWhatsAppUrl } from "@/lib/whatsapp";
 import { getProductBySlug, getSettings } from "@/services/catalog";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug:string }> }) {
@@ -29,17 +29,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug:stri
 export default async function ProductPage({ params }: { params: Promise<{ slug:string }> }) {
   const [product, settings] = await Promise.all([getProductBySlug((await params).slug), getSettings()]);
   if (!product) notFound();
-  const wa = product.available && settings.business_open && settings.whatsapp_number ? buildProductWhatsAppUrl({ number:settings.whatsapp_number, productName:product.name, price:product.price, currency:settings.currency, showPrice:settings.show_prices }) : null;
+  const canOrder = product.available && settings.business_open;
   return <><SiteHeader current="catalog" settings={settings}/><main className="public-main"><div className="container section product-page"><Link className="back-link" href="/catalogo">← Volver al catálogo</Link>
     <div className="card product-detail">
-      <div className="rough-frame" style={{ backgroundImage: `url("${recurso4.src}")` }} aria-hidden="true" />
+      <RoughFrame shape={CARD_FRAME} />
       <div className={`product-image product-detail-image ${product.image_url ? "" : "is-placeholder"}`}><Image src={product.image_url || "/placeholder.svg"} alt={product.name} fill priority sizes="(max-width:700px) 100vw, 50vw"/></div>
       <div className="stack product-detail-content">
         <span className={`badge ${product.available?"available":"unavailable"}`}>{product.available?"Disponible":"No disponible"}</span>
         <small className="eyebrow">{product.category?.name}</small><h1>{product.name}</h1>
         {settings.show_prices && <strong className="product-detail-price">{formatPrice(product.price,settings.currency)}</strong>}
         {(product.description || product.short_description) && <p className="product-detail-description">{product.description || product.short_description}</p>}
-        {wa ? <WhatsAppButton href={wa}/> : <p className="notice">Este producto no está disponible para consultas en este momento.</p>}
+        {canOrder ? <AddToCartButton product={product} /> : <p className="notice">Este producto no está disponible para pedidos en este momento.</p>}
       </div>
     </div></div>
   </main><PublicFooter settings={settings}/></>;

@@ -46,6 +46,7 @@ function sanitizeProduct(product: Product): Product {
   return {
     ...product,
     image_url: storagePathFromPublicUrl(product.image_url, "products") ? product.image_url : null,
+    flavors: Array.isArray(product.flavors) ? product.flavors.filter((flavor) => typeof flavor === "string" && flavor.trim()) : [],
   };
 }
 

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/supabase/admin";
 import { categorySchema, productSchema, settingsSchema } from "@/lib/validation/schemas";
-import { firstError, formBoolean, formString } from "@/lib/forms";
+import { firstError, formBoolean, formLines, formString } from "@/lib/forms";
 import { slugify } from "@/lib/format";
 import {
   removeImageByUrl,
@@ -115,6 +115,7 @@ export async function saveProduct(data: FormData) {
     available: formBoolean(data, "available"),
     featured: formBoolean(data, "featured"),
     active: formBoolean(data, "active"),
+    flavors: formLines(data, "flavors"),
   });
   if (!parsed.success) adminRedirect("/admin/productos", firstError(parsed.error), "error");
 

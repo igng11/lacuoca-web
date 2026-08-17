@@ -5,7 +5,7 @@ import { RoughFrame } from "@/components/rough-frame";
 import { ABOUT_FRAME } from "@/data/rough-frame-path";
 import { CommentsSection } from "@/components/public/comments-section";
 import { HeroArch } from "@/components/public/hero-arch";
-import recursoOlla from "@/assets/img/Recurso 11.png";
+import recursoOlla from "@/assets/img/abierto@3x.png";
 import { ProductCard } from "@/components/public/product-card";
 import { PublicFooter } from "@/components/public/public-footer";
 import { SiteHeader } from "@/components/public/site-header";
@@ -48,6 +48,39 @@ export default async function HomePage() {
 
       <div className="divider" />
 
+      {/* CÓMO PEDIR */}
+      <section id="como-pedir" className="public-section how-to-section">
+        <div className="container">
+          <span className="eyebrow">Así de fácil</span>
+          <h2 className="section-title">¿Cómo pedís tus viandas?</h2>
+          <p className="how-to-subtitle">Así de simple. Sin cocinar, sin vueltas.</p>
+          <ol className="how-to-steps">
+            <li className="how-to-step">
+              <span className="how-to-number">1</span>
+              <h3>Elegí tus viandas</h3>
+              <p>Recorré el catálogo y armá tu pedido: sueltas o el pack semanal completo. Elegís sabor y cantidad de cada una.</p>
+            </li>
+            <li className="how-to-step">
+              <span className="how-to-number">2</span>
+              <h3>Nos escribís por WhatsApp</h3>
+              <p>Tu selección se convierte en un mensaje armado. Nosotros confirmamos día de entrega y zona.</p>
+            </li>
+            <li className="how-to-step">
+              <span className="how-to-number">3</span>
+              <h3>Cocinamos y entregamos</h3>
+              <p>Vero cocina fresco para tu pedido. Te lo llevamos el día acordado, a tu zona.</p>
+            </li>
+            <li className="how-to-step">
+              <span className="how-to-number">4</span>
+              <h3>Listas para comer</h3>
+              <p>Solo calentar y disfrutar. Comida casera de verdad, sin que vos tengas que cocinar.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <div className="divider" />
+
       {/* INTRO */}
       <section id="recomendados" className="text-block">
         <Image className="text-block-pot" src={recursoOlla} alt="" priority={false} />
@@ -62,6 +95,9 @@ export default async function HomePage() {
           {visibleProducts.length
             ? <div className="product-grid">{visibleProducts.map((product) => <ProductCard key={product.id} product={product} settings={settings} />)}</div>
             : <div className="empty public-empty"><h3>Estamos preparando el catálogo</h3><p>Los primeros productos van a aparecer acá apenas estén publicados.</p></div>}
+          <div className="featured-cta">
+            <Link href="/catalogo" className="btn btn-primary">Ver catálogo completo</Link>
+          </div>
         </div>
       </section>
 

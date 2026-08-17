@@ -27,6 +27,7 @@ export const productSchema = z.object({
   short_description: z.string().trim().max(180), description: z.string().trim().max(2000),
   price: z.coerce.number().min(0, "El precio no puede ser negativo."),
   display_order: z.coerce.number().int().min(0), available: z.boolean(), featured: z.boolean(), active: z.boolean(),
+  flavors: z.array(z.string().trim().min(1).max(80)).max(40),
 });
 
 export const settingsSchema = z.object({

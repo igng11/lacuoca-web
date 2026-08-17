@@ -1,22 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import { AddToCartButton } from "@/components/public/add-to-cart-button";
 import { RoughFrame } from "@/components/rough-frame";
 import { CARD_FRAME } from "@/data/rough-frame-path";
-import { buildProductWhatsAppUrl } from "@/lib/whatsapp";
 import type { BusinessSettings, Product } from "@/types/database";
 
 export function ProductCard({ product, settings }: { product: Product; settings: BusinessSettings }) {
   const summary = product.short_description || product.description?.split("\n").find(Boolean);
-  const whatsappUrl = product.available && settings.business_open && settings.whatsapp_number
-    ? buildProductWhatsAppUrl({
-        number: settings.whatsapp_number,
-        productName: product.name,
-        price: product.price,
-        currency: settings.currency,
-        showPrice: settings.show_prices,
-      })
-    : null;
+  const canOrder = product.available && settings.business_open;
 
   const currency = /^[A-Z]{3}$/.test(settings.currency) ? settings.currency : "ARS";
   const price = settings.show_prices
@@ -45,12 +36,10 @@ export function ProductCard({ product, settings }: { product: Product; settings:
 
         {summary && <p className="product-description">{summary}</p>}
 
-        <div className={`product-card-actions${whatsappUrl ? "" : " single"}`}>
-          {whatsappUrl ? (
+        <div className={`product-card-actions${canOrder ? "" : " single"}`}>
+          {canOrder ? (
             <>
-              <a className="btn btn-primary" href={whatsappUrl} target="_blank" rel="noreferrer">
-                <MessageCircle size={17} aria-hidden="true" /> Consultar
-              </a>
+              <AddToCartButton product={product} />
               <Link className="btn btn-soft" href={`/producto/${product.slug}`}>Detalle</Link>
             </>
           ) : (

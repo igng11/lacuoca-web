@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { contrastRatio, readableAccent, textColorOn } from "@/lib/color";
 import { slugify } from "@/lib/format";
-import { buildProductWhatsAppUrl, buildWhatsAppUrl, normalizeWhatsAppNumber } from "@/lib/whatsapp";
+import { buildCartWhatsAppUrl, buildWhatsAppUrl, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 import { productSchema, settingsSchema } from "@/lib/validation/schemas";
 import { detectImageMime, storagePathFromPublicUrl } from "@/lib/storage";
 import { imageSelectionError, MAX_IMAGE_SIZE } from "@/lib/image-validation";
@@ -14,11 +14,8 @@ const validSettings = {
   address: "",
   opening_hours: "",
   instagram_url: "https://instagram.com/lacuoca",
-  primary_color: "#B45309",
-  secondary_color: "#14532D",
   hero_title: "Sabores",
   hero_subtitle: "",
-  currency: "ARS",
   show_prices: true,
   business_open: true,
 };
@@ -33,6 +30,7 @@ const validProduct = {
   available: true,
   featured: false,
   active: true,
+  flavors: [],
 };
 
 describe("WhatsApp", () => {
@@ -52,22 +50,27 @@ describe("WhatsApp", () => {
   });
 
   it("incluye u oculta el precio según la configuración", () => {
-    const withPrice = buildProductWhatsAppUrl({
+    const items = [{ name: "Torta & café", price: 12500, quantity: 2 }];
+    const withPrice = buildCartWhatsAppUrl({ number: "+54 9 11-2345-6789", items, currency: "ARS", showPrice: true });
+    const withoutPrice = buildCartWhatsAppUrl({ number: "+54 9 11-2345-6789", items, currency: "ARS", showPrice: false });
+    expect(new URL(withPrice!).searchParams.get("text")).toContain("$");
+    expect(new URL(withoutPrice!).searchParams.get("text")).not.toContain("$");
+  });
+
+  it("arma un pedido con varios items y el total correcto", () => {
+    const url = buildCartWhatsAppUrl({
       number: "+54 9 11-2345-6789",
-      productName: "Torta & café",
-      price: 12500,
+      items: [
+        { name: "Tarta de verdura", price: 4000, quantity: 2 },
+        { name: "Milanesa napolitana", price: 6500, quantity: 1 },
+      ],
       currency: "ARS",
       showPrice: true,
     });
-    const withoutPrice = buildProductWhatsAppUrl({
-      number: "+54 9 11-2345-6789",
-      productName: "Torta & café",
-      price: 12500,
-      currency: "ARS",
-      showPrice: false,
-    });
-    expect(new URL(withPrice!).searchParams.get("text")).toContain("$");
-    expect(new URL(withoutPrice!).searchParams.get("text")).not.toContain("$");
+    const text = new URL(url!).searchParams.get("text")!;
+    expect(text).toContain("2x Tarta de verdura");
+    expect(text).toContain("1x Milanesa napolitana");
+    expect(text).toContain("Total: " + new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 2 }).format(14500));
   });
 });
 
@@ -83,13 +86,11 @@ describe("slugs y validaciones", () => {
     expect(productSchema.safeParse({ ...validProduct, name: "   " }).success).toBe(false);
   });
 
-  it("normaliza WhatsApp y bloquea URL, moneda o CSS peligrosos", () => {
+  it("normaliza WhatsApp y bloquea URLs peligrosas", () => {
     const parsed = settingsSchema.parse(validSettings);
     expect(parsed.whatsapp_number).toBe("5491123456789");
     expect(settingsSchema.safeParse({ ...validSettings, whatsapp_number: "" }).success).toBe(true);
     expect(settingsSchema.safeParse({ ...validSettings, instagram_url: "javascript:alert(1)" }).success).toBe(false);
-    expect(settingsSchema.safeParse({ ...validSettings, primary_color: "red;display:none" }).success).toBe(false);
-    expect(settingsSchema.safeParse({ ...validSettings, currency: "12$" }).success).toBe(false);
   });
 });
 

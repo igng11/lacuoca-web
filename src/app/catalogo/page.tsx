@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import abiertoPot from "@/assets/img/abierto@3x.png";
 import { ProductCard } from "@/components/public/product-card";
 import { PublicFooter } from "@/components/public/public-footer";
 import { SiteHeader } from "@/components/public/site-header";
@@ -22,9 +24,12 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
     <main className="public-main catalog-main">
       <header className="catalog-hero">
         <div className="container catalog-hero-inner">
-          <span className="eyebrow">Nuestro menú</span>
-          <h1 className="page-title">Sabores para cada momento</h1>
-          <p>Explorá todas las preparaciones o elegí una categoría para encontrar lo que buscás.</p>
+          <Image className="catalog-hero-pot" src={abiertoPot} alt="" priority={false} />
+          <div className="catalog-hero-copy">
+            <span className="eyebrow">Nuestro menú</span>
+            <h1 className="page-title">Sabores para cada momento</h1>
+            <p>Explorá todas las preparaciones o elegí una categoría para encontrar lo que buscás.</p>
+          </div>
         </div>
       </header>
       <div className="container catalog-content">

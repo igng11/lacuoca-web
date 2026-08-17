@@ -8,6 +8,7 @@ export type Product = {
   short_description: string | null; description: string | null;
   price: number; image_url: string | null; available: boolean; featured: boolean;
   active: boolean; display_order: number; created_at: string; updated_at: string;
+  flavors: string[];
   category?: Pick<Category, "id" | "name" | "slug"> | null;
 };
 

@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { CartWidget } from "@/components/public/cart-widget";
+import { FloatingDock } from "@/components/public/floating-dock";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import type { BusinessSettings } from "@/types/database";
 
@@ -36,26 +38,27 @@ export function SiteHeader({ current, settings }: { current?: "home" | "catalog"
           : <span className="brand-name">{settings?.business_name || "La Cuoca"}</span>}
       </Link>
 
-      <button
-        type="button"
-        className="nav-toggle"
-        aria-expanded={menuOpen}
-        aria-controls="public-nav"
-        aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-        onClick={() => setMenuOpen((open) => !open)}
-      >
-        {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
-      </button>
-
       <nav id="public-nav" className={`public-nav${menuOpen ? " is-open" : ""}`}>
-        <Link href={isCatalog ? "/" : "/catalogo"} className="nav-link" aria-current={current === "catalog" ? "page" : undefined} onClick={() => setMenuOpen(false)}>
-          {isCatalog ? "Inicio" : "Catálogo"}
-        </Link>
-        <a className="nav-link" href={isCatalog ? "/#recomendados" : "#recomendados"} onClick={scrollTo("recomendados")}>Recomendados</a>
+        <a className="nav-link" href={isCatalog ? "/#como-pedir" : "#como-pedir"} onClick={scrollTo("como-pedir")}>Cómo pedir</a>
+        <Link href="/catalogo" className="nav-link" onClick={() => setMenuOpen(false)}>Catálogo</Link>
         <a className="nav-link" href={isCatalog ? "/#nosotros" : "#nosotros"} onClick={scrollTo("nosotros")}>Nosotros</a>
-        <a className="nav-link" href={isCatalog ? "/#comentarios" : "#comentarios"} onClick={scrollTo("comentarios")}>Opiniones</a>
         {whatsappUrl && <a className="nav-link nav-whatsapp" href={whatsappUrl} target="_blank" rel="noreferrer" onClick={() => setMenuOpen(false)}>Contacto</a>}
       </nav>
+
+      <div className="header-actions">
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-expanded={menuOpen}
+          aria-controls="public-nav"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+        </button>
+        <CartWidget settings={settings} />
+      </div>
     </div>
+    <FloatingDock settings={settings} />
   </header>;
 }

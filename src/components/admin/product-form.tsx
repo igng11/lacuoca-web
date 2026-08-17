@@ -39,6 +39,18 @@ export function ProductForm({ product, categories }: { product?: Product; catego
         <label htmlFor={`${prefix}-description`}>Descripción completa</label>
         <textarea id={`${prefix}-description`} className="input" name="description" rows={4} defaultValue={product?.description || ""} />
       </div>
+      <div className="field">
+        <label htmlFor={`${prefix}-flavors`}>Sabores (uno por línea)</label>
+        <textarea
+          id={`${prefix}-flavors`}
+          className="input"
+          name="flavors"
+          rows={4}
+          placeholder={"Mozzarella y cebolla\nTomate y mozzarella\nCalabaza"}
+          defaultValue={product?.flavors?.join("\n") || ""}
+        />
+        <small className="muted">Si cargás al menos uno, el visitante va a tener que elegir un sabor antes de agregar al carrito. Dejalo vacío si el producto no tiene variantes.</small>
+      </div>
       <ImageInput id={`${prefix}-image`} name="image" label="Foto del producto" current={product?.image_url} />
       <div className="form-grid two">
         {[
