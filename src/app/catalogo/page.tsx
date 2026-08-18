@@ -27,8 +27,13 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
           <Image className="catalog-hero-pot" src={abiertoPot} alt="" priority={false} />
           <div className="catalog-hero-copy">
             <span className="eyebrow">Nuestro menú</span>
-            <h1 className="page-title">Sabores para cada momento</h1>
-            <p>Explorá todas las preparaciones o elegí una categoría para encontrar lo que buscás.</p>
+            <h1 className="page-title catalog-hero-title">Sabores para cada momento</h1>
+            <p className="catalog-hero-note">Viandas frizadas, aptas para horno y microondas.</p>
+            <p className="catalog-hero-note catalog-hero-note-label">Precios:</p>
+            <ul className="catalog-hero-prices">
+              <li>Vianda suelta: $16.000 c/u</li>
+              <li>Pack semanal (5 viandas, a elección): $60.000 ($12.000 c/u — 25% de descuento)</li>
+            </ul>
           </div>
         </div>
       </header>
