@@ -293,7 +293,7 @@ button, input, textarea, select { font: inherit; }
 .cart-total { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mission); font-size: 1.15rem; color: var(--ink); }
 .cart-total strong { color: var(--red); font-size: 1.35rem; }
 .cart-drawer-footer .btn { width: 100%; }
-.cart-empty { padding: 2rem 1.5rem; color: var(--public-muted); line-height: 1.6; }
+.cart-empty { padding: 2rem 1.5rem; color: var(--public-muted); line-height: 1.6; font-family: var(--font-mission); }
 
 /* Con 5 links más el carrito no entran con comodidad en pantallas medianas;
    en vez
@@ -336,7 +336,7 @@ button, input, textarea, select { font: inherit; }
    100%) se achica hasta entrar en el más chico de los dos. Así nunca fuerza
    al hero a pasarse de la altura de pantalla disponible, sea cual sea el
    ancho de ventana o cuánto mida el texto al lado. */
-.hero-media-frame { position: relative; flex: none; width: clamp(170px, 19vw, 270px); max-height: min(36vh, 290px); display: flex; align-items: center; justify-content: center; }
+.hero-media-frame { position: relative; flex: none; width: clamp(170px, 22vw, 380px); max-height: min(42vh, 420px); display: flex; align-items: center; justify-content: center; }
 .hero-arch { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; }
 .hero-copy { display: flex; flex-direction: column; gap: clamp(.5rem, 2vh, 1rem); align-items: flex-start; text-align: left; max-width: min(100%, 44rem); }
 .hero-kicker { width: fit-content; display: inline-flex; align-items: center; gap: .55rem; margin-bottom: clamp(.5rem, 1.5vw, .9rem); padding: .5rem .75rem; border: 1px solid var(--public-line); border-radius: 999px; color: var(--red); background: var(--public-surface); font-size: .85rem; font-weight: 750; font-family: var(--font-mission); text-transform: uppercase; letter-spacing: 1px; }
@@ -346,7 +346,7 @@ button, input, textarea, select { font: inherit; }
    pero baja (poca altura de viewport) el título se quedaba en su tope de
    3.78rem sin achicarse nunca, y con 4 líneas eso solo ya se comía la
    ventana. Sumar un término en vh hace que también reaccione a la altura. */
-.hero-copy h1 { max-width: 18ch; margin: 0; padding-right: clamp(.5rem, 2vw, 1.5rem); font-family: var(--font-script); font-size: clamp(1.3rem, 2.2vw + 1.6vh, 2.7rem); font-weight: 500; line-height: 1.15; letter-spacing: .02em; text-wrap: balance; color: var(--blue); }
+.hero-copy h1 { max-width: 18ch; margin: 0; padding-right: clamp(.5rem, 2vw, 1.5rem); font-family: var(--font-script); font-size: clamp(1.3rem, 2.4vw + 1.8vh, 3.9rem); font-weight: 500; line-height: 1.15; letter-spacing: .02em; text-wrap: balance; color: var(--blue); }
 .hero-copy .hero-lede { max-width: 38rem; margin-top: 1.1rem; color: var(--public-muted); font-size: clamp(1rem, 2vw,1.12rem); line-height: 1.7; }
 .hero-copy .hero-actions { margin-top: .9rem; }
 .hero-copy .hero-actions .btn { min-height: 35px; padding-inline: 1.1rem; font-size: .89rem; }
@@ -414,8 +414,8 @@ button, input, textarea, select { font: inherit; }
 .product-card-body { display: flex; flex: 1; flex-direction: column; gap: .45rem; padding: .5rem 8% 1.75rem; font-family: var(--font-mission); }
 .product-header { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
 .product-title { margin: 0; font-size: 1.36rem; font-weight: 750; line-height: 1.25; letter-spacing: .01em; overflow-wrap: anywhere; text-transform: uppercase; font-family: var(--font-mission); color: var(--red); }
-.product-price-badge { flex: none; padding: .42rem .7rem; border-radius: 999px; background: color-mix(in srgb, var(--blue) 18%, white); color: #0a2733; font-size: .95rem; font-weight: 800; white-space: nowrap; }
-.product-description { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; min-height: 2.7rem; margin: 0; color: var(--public-muted); font-size: .94rem; line-height: 1.5; white-space: pre-line; }
+.product-price-badge { flex: none; padding: .5rem .9rem; border-radius: 999px; background: var(--blue); color: #fff; font-family: var(--font-mission); font-size: 1.15rem; font-weight: 800; letter-spacing: .01em; white-space: nowrap; }
+.product-description { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; min-height: 2.7rem; margin: 0; color: var(--public-muted); font-size: .94rem; line-height: 1.5; white-space: pre-line; font-family: var(--font-mission); }
 /* margin-top: auto (no un valor fijo) empuja los botones al fondo del flex
    column de .product-card-body, sin importar cuántas líneas ocupe la
    descripción de arriba — la distancia al borde de la card queda constante. */
