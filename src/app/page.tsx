@@ -51,9 +51,8 @@ export default async function HomePage() {
       {/* CÓMO PEDIR */}
       <section id="como-pedir" className="public-section how-to-section">
         <div className="container">
-          <span className="eyebrow">Así de fácil</span>
-          <h2 className="section-title">¿Cómo pedís tus viandas?</h2>
           <p className="how-to-subtitle">Así de simple. Sin cocinar, sin vueltas.</p>
+          <h2 className="section-title">¿Cómo pedís tus viandas?</h2>
           <ol className="how-to-steps">
             <li className="how-to-step">
               <span className="how-to-number">1</span>
@@ -112,12 +111,12 @@ export default async function HomePage() {
               : <><Image src="/img/nos.jpg" alt="Nosotros" fill sizes="(max-width: 760px) 100vw, 50vw" /><RoughFrame shape={ABOUT_FRAME} /></>}
           </div>
           <div className="about-copy">
-            <h2 className="section-title about-title">De la olla a tu mesa</h2>
-            <p className="about-text about-foundation">Nacimos en 2014 con una olla humeante y muchas ganas de cocinar.</p>
+            <h2 className="section-title about-title">Nuestra historia</h2>
+            <p className="about-text about-foundation">Nacimos en 2014 con el amor por la cocina y al barrio de Florida.</p>
             <div className="about-story" tabIndex={0} aria-label="Nuestra historia">
-              <p className="about-text">Soy cocinera hace muchos años. Después de trabajar por Europa y por distintos lugares acá en Argentina, y ya siendo mamá, tuve ganas de volver a mis raíces: abrir un lugar en Florida, mi barrio de toda la vida. Muchos me sugirieron otros lugares, pero para mí el barrio siempre fue el punto de partida.</p>
+              <p className="about-text">Hola! Soy Vero. Soy cocinera hace muchos años. Después de trabajar por Europa y por distintos lugares acá en Argentina, y ya siendo mamá, tuve ganas de volver a mis raíces: abrir un lugar en Florida, mi barrio de toda la vida. Muchos me sugirieron otros lugares, pero para mí el barrio siempre fue el punto de partida.</p>
               <p className="about-text">Después de buscar mucho, encontré este local que durante años había sido una casa de empanadas. Apenas entré me enamoré: una casa luminosa, ventilada, con esa calidez que pocos locales tienen. Fue en marzo de 2014 cuando el lugar pasó a ser mío, y desde entonces estamos en las callecitas tranquilas del barrio, vendiéndole a los vecinos, a oficinas y a quienes se van cruzando en el camino. Por el camino tuve socios que me acompañaron —Guille primero, Adri después— y hoy sigo sola, con toda mi alma puesta en esto.</p>
-              <p className="about-text">El nombre, La Cuoca, viene de mi apellido de origen italiano, Cuocante. Quería algo que me representara de verdad, sin caer en los clásicos &ldquo;Casa de...&rdquo; o &ldquo;Taller de...&rdquo;. Algunos todavía me dicen &ldquo;La Cuca&rdquo; o &ldquo;La Coca&rdquo;, y hasta descubrí después que a dos cuadras hay un kiosco llamado El Cuco. Cosas del barrio.</p>
+              <p className="about-text">El nombre, La Cuoca, viene de mi apellido de origen italiano, Ruzzante. Quería algo que me representara de verdad, sin caer en los clásicos &ldquo;Casa de...&rdquo; o &ldquo;Taller de...&rdquo;. Algunos todavía me dicen &ldquo;La Cuca&rdquo; o &ldquo;La Coca&rdquo;, y hasta descubrí después que a dos cuadras hay un kiosco llamado El Cuco. Cosas del barrio 🤣</p>
             </div>
           </div>
         </div>

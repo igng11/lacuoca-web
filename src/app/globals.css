@@ -83,7 +83,11 @@ button, input, textarea, select { font: inherit; }
 .muted { color: var(--public-muted); }
 .section { padding-block: clamp(3rem, 7vw, 4.5rem); }
 
-.admin-shell { min-height: 100vh; background: var(--cream); }
+/* El summary de cada acordeón (ej. "Información del negocio") ya usaba Mission,
+   pero el formulario en sí (h2, labels, textos de ayuda) no tenía fuente
+   propia y heredaba la Fushia cursiva del body. Mission para todo el panel
+   admin, que es funcional, no decorativo. */
+.admin-shell { min-height: 100vh; background: var(--cream); font-family: var(--font-mission); }
 .admin-shell h1,
 .admin-shell h2,
 .admin-shell .eyebrow,
@@ -546,20 +550,28 @@ button, input, textarea, select { font: inherit; }
 .footer-bottom { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; padding-block: 1.2rem; border-top: 1px solid var(--public-line); color: var(--public-muted); font-size: .85rem; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mission); }
 
 /* --- CATÁLOGO --- */
-.catalog-hero { position: relative; padding-block: clamp(3.5rem, 8vw, 6rem); background: var(--public-cream-deep); }
+/* Mismo criterio que el hero de la home: los clamps reaccionan también a vh
+   (no solo vw) para que ni se desborden en pantallas bajas ni queden chicos
+   y perdidos en monitores grandes. */
+.catalog-hero { position: relative; padding-block: clamp(2.5rem, 5vw + 3vh, 6rem); background: var(--public-cream-deep); }
 .catalog-hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; margin-inline: auto; width: min(960px, calc(100% - 2rem)); height: 1px; background: var(--public-line); }
 /* .container solo (1200px) queda más ancho que el límite de 960px que usa el
    resto del sitio (hero, header, divisores, footer) — mismo ajuste ya hecho ahí. */
 .catalog-hero-inner, .catalog-content, .comments-section .container { max-width: 960px; }
-.catalog-hero-inner { display: flex; align-items: center; gap: clamp(2rem, 6vw, 4rem); text-align: left; }
-.catalog-hero-pot { display: block; flex: none; width: clamp(180px, 22vw, 320px); height: auto; transform-origin: center; animation: loading-float 2.2s ease-in-out infinite; }
-.catalog-hero-copy { flex: 1; min-width: 0; }
+.catalog-hero-inner { display: flex; align-items: center; justify-content: center; gap: clamp(2.5rem, 6vw, 4.5rem); text-align: left; }
+.catalog-hero-pot { display: block; flex: none; width: clamp(160px, 14vw + 8vh, 380px); max-height: min(38vh, 320px); height: auto; transform-origin: center; animation: loading-float 2.2s ease-in-out infinite; }
+/* flex:none (no flex:1) + un max-width propio: con flex:1 esta columna se
+   estiraba a ocupar todo el resto del contenedor de 960px, y como su
+   contenido queda alineado a la izquierda, sobraba espacio vacío a la
+   derecha — el conjunto (olla + texto) no se leía centrado como grupo pese
+   al justify-content:center del padre. Con un ancho propio y acotado, el
+   par queda centrado de verdad. */
+.catalog-hero-copy { flex: none; min-width: 0; max-width: 36rem; }
 .catalog-hero .page-title { max-width: 13ch; margin: .65rem 0 1rem; font-family: var(--font-title); font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 500; letter-spacing: -.04em; color: var(--blue); }
-.catalog-hero .catalog-hero-title { max-width: none; font-size: clamp(3.2rem, 5.6vw, 4.2rem); }
+.catalog-hero .catalog-hero-title { max-width: 100%; font-size: clamp(2rem, 3vw + 2.2vh, 4.2rem); }
 .catalog-hero p { max-width: 36rem; margin: 0; color: var(--public-muted); line-height: 1.65; font-family: var(--font-mission); }
-.catalog-hero-note { margin-top: .75rem; }
-.catalog-hero-note-label { margin-top: 1rem; font-weight: 700; color: var(--ink); }
-.catalog-hero-prices { list-style: none; margin: .35rem 0 0; padding: 0; max-width: 36rem; color: var(--public-muted); font-family: var(--font-mission); line-height: 1.65; }
+.catalog-hero p.catalog-hero-note { margin-top: .75rem; font-size: 1.3rem; line-height: 3.3; }
+.catalog-hero-prices { list-style: none; margin: .35rem 0 0; padding: 0; max-width: 36rem; color: var(--public-muted); font-family: var(--font-mission); font-size: 1.15rem; line-height: 1.65; }
 .catalog-hero-prices li { padding-left: 1.1rem; position: relative; }
 .catalog-hero-prices li::before { content: "•"; position: absolute; left: 0; color: var(--red); }
 .catalog-content { padding-block: clamp(2rem, 6vw, 5rem); }

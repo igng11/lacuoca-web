@@ -29,10 +29,10 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
             <span className="eyebrow">Nuestro menú</span>
             <h1 className="page-title catalog-hero-title">Sabores para cada momento</h1>
             <p className="catalog-hero-note">Viandas frizadas, aptas para horno y microondas.</p>
-            <p className="catalog-hero-note catalog-hero-note-label">Precios:</p>
             <ul className="catalog-hero-prices">
-              <li>Vianda suelta: $16.000 c/u</li>
-              <li>Pack semanal (5 viandas, a elección): $60.000 ($12.000 c/u — 25% de descuento)</li>
+              <li>Pedí tu Pack semanal (5 viandas, a elección) y obtené 25% de descuento!</li>
+              <li>Envíos gratis todo Vicente López. Otras zonas, consultar.</li>
+              <li>Entregas días miércoles y sábados.</li>
             </ul>
           </div>
         </div>
