@@ -62,12 +62,12 @@ export default async function HomePage() {
             <li className="how-to-step">
               <span className="how-to-number">2</span>
               <h3>Nos escribís por WhatsApp</h3>
-              <p>Tu selección se convierte en un mensaje armado. Nosotros confirmamos día de entrega y zona.</p>
+              <p>Tu selección se convierte en un mensaje armado. Coordinamos y confirmamos día de entrega.</p>
             </li>
             <li className="how-to-step">
               <span className="how-to-number">3</span>
               <h3>Cocinamos y entregamos</h3>
-              <p>Vero cocina fresco para tu pedido. Te lo llevamos el día acordado, a tu zona.</p>
+              <p>Vero cocina fresco para tu pedido. Te lo llevamos el día acordado.</p>
             </li>
             <li className="how-to-step">
               <span className="how-to-number">4</span>

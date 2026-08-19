@@ -542,7 +542,7 @@ button, input, textarea, select { font: inherit; }
 .footer-card-contact { transform: rotate(1.1deg); }
 .footer-card-tag { align-self: flex-start; padding: .35rem 1rem; border-radius: 999px; background: var(--red); color: #fff; font-family: var(--font-mission); font-size: clamp(1.15rem, 2vw, 1.4rem); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transform: rotate(2deg); }
 .footer-card-contact .footer-card-tag { background: var(--blue); }
-.footer-card p, .footer-social { display: flex; align-items: flex-start; gap: .7rem; margin: 0; color: var(--ink); line-height: 1.4; font-family: var(--font-mission); font-size: clamp(1.3rem, 2.6vw, 1.65rem); font-weight: 700; }
+.footer-card p, .footer-social { display: flex; align-items: flex-start; gap: .7rem; margin: 0; color: var(--ink); line-height: 1.4; font-family: var(--font-mission); font-size: clamp(1.3rem, 2.6vw, 1.65rem); font-weight: 700; overflow-wrap: anywhere; }
 .footer-social { min-height: 32px; text-transform: uppercase; letter-spacing: .5px; }
 .footer-social:hover { color: var(--red); }
 .footer-card p svg, .footer-card .footer-social svg { flex: none; margin-top: .15rem; color: var(--red); }
@@ -570,8 +570,12 @@ button, input, textarea, select { font: inherit; }
 .catalog-hero .page-title { max-width: 13ch; margin: .65rem 0 1rem; font-family: var(--font-title); font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 500; letter-spacing: -.04em; color: var(--blue); }
 .catalog-hero .catalog-hero-title { max-width: 100%; font-size: clamp(2rem, 3vw + 2.2vh, 4.2rem); }
 .catalog-hero p { max-width: 36rem; margin: 0; color: var(--public-muted); line-height: 1.65; font-family: var(--font-mission); }
-.catalog-hero p.catalog-hero-note { margin-top: .75rem; font-size: 1.3rem; line-height: 3.3; }
-.catalog-hero-prices { list-style: none; margin: .35rem 0 0; padding: 0; max-width: 36rem; color: var(--public-muted); font-family: var(--font-mission); font-size: 1.15rem; line-height: 1.65; }
+/* "Interlineado al doble" era en realidad pedido de más separación ENTRE
+   título, bajada y detalles (no line-height dentro de un párrafo de una
+   sola línea) — el margin-top más grande entre bloques es lo que da ese
+   aire, en vez de estirar el alto de línea del texto en sí. */
+.catalog-hero p.catalog-hero-note { margin-top: 1.5rem; font-size: 1.3rem; line-height: 1.65; }
+.catalog-hero-prices { list-style: none; margin: 1.25rem 0 0; padding: 0; max-width: 36rem; color: var(--public-muted); font-family: var(--font-mission); font-size: 1.15rem; line-height: 1.65; }
 .catalog-hero-prices li { padding-left: 1.1rem; position: relative; }
 .catalog-hero-prices li::before { content: "•"; position: absolute; left: 0; color: var(--red); }
 .catalog-content { padding-block: clamp(2rem, 6vw, 5rem); }

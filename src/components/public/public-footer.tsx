@@ -1,4 +1,4 @@
-import { Clock, Instagram, MapPin, MessageCircle } from "lucide-react";
+import { Clock, Instagram, Mail, MapPin, MessageCircle } from "lucide-react";
 import { RoughFrame } from "@/components/rough-frame";
 import { CARD_FRAME } from "@/data/rough-frame-path";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
@@ -35,6 +35,9 @@ export function PublicFooter({ settings }: { settings: BusinessSettings }) {
               <Instagram size={28} aria-hidden="true" /> Instagram
             </a>
           )}
+          <a className="footer-social" href="mailto:lacuocacomidas@gmail.com">
+            <Mail size={28} aria-hidden="true" /> Correo
+          </a>
         </div>
       </div>
       <div className="container footer-bottom">
