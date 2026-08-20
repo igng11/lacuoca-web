@@ -114,6 +114,11 @@ button, input, textarea, select { font: inherit; }
 .admin-item > form:last-child { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--public-line); }
 .create-panel { padding: 1rem; scroll-margin-top: 5rem; }
 .create-panel > summary { font-weight: 800; }
+/* La negrita del summary se heredaba también al subtítulo ("Datos, imágenes
+   y colores"), a diferencia de los summary de producto/categoría (que no
+   tienen ese font-weight:800 de base). Volverlo a peso normal ahí lo deja
+   igual que esos subtítulos. */
+.settings-panel > summary .muted { font-weight: 400; }
 .form-grid { display:grid; gap:1rem; }
 .filter-form { padding: 1rem; background: var(--cream); border: 1px solid var(--public-line); border-radius: 1rem; }
 .filter-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
@@ -164,7 +169,7 @@ button, input, textarea, select { font: inherit; }
    de direcciones del celular aparece o desaparece (a diferencia de vh). */
 .site-loading { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 3rem 1rem; text-align: center; }
 .site-loading-art { width: clamp(140px, 22vw, 220px); height: auto; transform-origin: center; animation: loading-float 2.2s ease-in-out infinite; }
-.site-loading-text { margin: 0; color: var(--public-muted); font-size: .95rem; font-weight: 650; letter-spacing: .02em; }
+.site-loading-text { margin: 0; color: var(--public-muted); font-size: .95rem; font-weight: 650; letter-spacing: .02em; font-family: var(--font-mission); }
 @keyframes loading-float {
   0%, 50%, 100% { transform: translateX(0) rotate(0); }
   25% { transform: translateX(-4px) rotate(-5deg); }
@@ -281,6 +286,18 @@ button, input, textarea, select { font: inherit; }
 .cart-drawer-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--public-line); }
 .cart-drawer-header h2 { margin: 0; font-family: var(--font-title); font-size: 1.6rem; color: var(--blue); }
 .cart-drawer-close { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--red); cursor: pointer; }
+.cart-drawer-back { display: flex; align-items: center; justify-content: center; flex: none; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--blue); cursor: pointer; }
+.cart-checkout-step { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; padding: 1.5rem; gap: 1rem; font-family: var(--font-mission); }
+.cart-checkout-step .field label { font-weight: 700; color: var(--ink); }
+.cart-checkout-error { color: var(--red); }
+.cart-delivery-days { display: flex; gap: .6rem; }
+.cart-delivery-day { flex: 1; min-height: 46px; padding: .7rem 1rem; border: 1px solid rgba(225, 48, 61, .3); border-radius: .8rem; background: var(--cream); color: var(--ink); font-family: var(--font-mission); font-weight: 700; cursor: pointer; transition: border-color .15s ease, background-color .15s ease, color .15s ease; }
+.cart-delivery-day.is-selected { border-color: var(--red); background: var(--red); color: #fff; }
+.cart-confirm-summary { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .5rem; }
+.cart-confirm-summary li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; color: var(--ink); }
+.cart-confirm-address { padding: 1rem; border: 1px solid var(--public-line); border-radius: .8rem; background: var(--cream); }
+.cart-confirm-address strong { display: block; margin-bottom: .35rem; color: var(--blue); }
+.cart-confirm-address p { margin: 0; color: var(--ink); white-space: pre-line; overflow-wrap: anywhere; }
 .cart-items { list-style: none; margin: 0; padding: .5rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; flex: 1; }
 .cart-item { display: flex; align-items: center; gap: .85rem; padding-bottom: 1rem; border-bottom: 1px solid var(--public-line); }
 .cart-item-media { position: relative; flex: none; width: 64px; height: 64px; border-radius: .75rem; overflow: hidden; background: var(--public-surface); }

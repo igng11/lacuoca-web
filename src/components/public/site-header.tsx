@@ -34,7 +34,7 @@ export function SiteHeader({ current, settings }: { current?: "home" | "catalog"
         }
       }}>
         {settings?.logo_url
-          ? <span className="brand-logo-wrap"><Image className="brand-logo" src={settings.logo_url} alt={settings.business_name || ""} fill sizes="200px" /></span>
+          ? <span className="brand-logo-wrap"><Image className="brand-logo" src={settings.logo_url} alt={settings.business_name || ""} fill sizes="200px" priority /></span>
           : <span className="brand-name">{settings?.business_name || "La Cuoca"}</span>}
       </Link>
 
