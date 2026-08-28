@@ -433,9 +433,12 @@ button, input, textarea, select { font: inherit; }
 .product-card .product-media img { object-fit: cover; transition: transform .2s ease-out; }
 .product-card .product-media.is-placeholder img { object-fit: contain; padding: 8%; }
 .product-card-body { display: flex; flex: 1; flex-direction: column; gap: .45rem; padding: .5rem 8% 1.75rem; font-family: var(--font-mission); }
-.product-header { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
+.product-header { display: block; }
 .product-title { margin: 0; font-size: 1.36rem; font-weight: 750; line-height: 1.25; letter-spacing: .01em; overflow-wrap: anywhere; text-transform: uppercase; font-family: var(--font-mission); color: var(--red); }
-.product-price-badge { flex: none; padding: .5rem .9rem; border-radius: 999px; background: var(--blue); color: #fff; font-family: var(--font-mission); font-size: 1.15rem; font-weight: 800; letter-spacing: .01em; white-space: nowrap; }
+.product-price-badge { align-self: flex-start; display: inline-flex; align-items: baseline; gap: .6rem; padding: .35rem .8rem .42rem; border: 0; border-radius: .2rem; background: #fdf299; white-space: nowrap; box-shadow: 0 3px 8px rgba(0,0,0,.18), 0 1px 0 rgba(0,0,0,.05); transform: rotate(-1.25deg); }
+.product-card:nth-child(even) .product-price-badge { transform: rotate(1deg); }
+.product-price-label { color: var(--red); font-family: var(--font-mission); font-size: .82rem; font-weight: 750; line-height: 1; letter-spacing: .04em; text-transform: uppercase; }
+.product-price-badge strong { color: var(--blue); font-family: var(--font-mission); font-size: 1.35rem; font-weight: 800; line-height: 1; letter-spacing: .015em; font-variant-numeric: tabular-nums; }
 .product-description { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; min-height: 2.7rem; margin: 0; color: var(--public-muted); font-size: .94rem; line-height: 1.5; white-space: pre-line; font-family: var(--font-mission); }
 /* margin-top: auto (no un valor fijo) empuja los botones al fondo del flex
    column de .product-card-body, sin importar cuántas líneas ocupe la

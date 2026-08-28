@@ -31,8 +31,14 @@ export function ProductCard({ product, settings }: { product: Product; settings:
           <h3 className="product-title">
             <Link href={`/producto/${product.slug}`}>{product.name}</Link>
           </h3>
-          {price && <span className="product-price-badge">{price}</span>}
         </div>
+
+        {price && (
+          <div className="product-price-badge" aria-label={`Precio: ${price}`}>
+            <span className="product-price-label">Precio</span>
+            <strong>{price}</strong>
+          </div>
+        )}
 
         {summary && <p className="product-description">{summary}</p>}
 
