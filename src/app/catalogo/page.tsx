@@ -4,7 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import abiertoPot from "@/assets/img/abierto@3x.png";
 import { ProductCard } from "@/components/public/product-card";
 import { PublicFooter } from "@/components/public/public-footer";
+import { RoughFrame } from "@/components/rough-frame";
 import { SiteHeader } from "@/components/public/site-header";
+import { CARD_FRAME } from "@/data/rough-frame-path";
+import { formatPrice } from "@/lib/format";
 import { getCategories, getProducts, getSettings } from "@/services/catalog";
 
 export const metadata = { title: "Catálogo", alternates: { canonical: "/catalogo" } };
@@ -18,6 +21,10 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
     ? allProducts.filter((product) => product.category?.slug === categoria)
     : allProducts;
   const selectedCategory = publishedCategories.find((category) => category.slug === categoria);
+  const availablePrices = allProducts.filter((product) => product.available && product.price > 0).map((product) => product.price);
+  const priceFrequency = availablePrices.reduce((counts, price) => counts.set(price, (counts.get(price) || 0) + 1), new Map<number, number>());
+  const individualPrice = [...priceFrequency.entries()].sort((a, b) => b[1] - a[1] || b[0] - a[0])[0]?.[0];
+  const comboPrice = individualPrice ? individualPrice * 5 * 0.75 : null;
 
   return <>
     <SiteHeader current="catalog" settings={settings} />
@@ -29,8 +36,23 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
             <span className="eyebrow">Nuestro menú</span>
             <h1 className="page-title catalog-hero-title">Sabores para cada momento</h1>
             <p className="catalog-hero-note">Viandas frizadas, aptas para horno y microondas.</p>
+            {settings.show_prices && individualPrice && comboPrice && (
+              <div className="catalog-price-options" aria-label="Precios de las viandas">
+                <div className="catalog-price-box catalog-price-box-featured">
+                  <RoughFrame shape={CARD_FRAME} color="var(--red)" className="rough-lines price-option-frame" />
+                  <span>Pack semanal</span>
+                  <strong>{formatPrice(comboPrice, settings.currency)}</strong>
+                  <small>5 viandas · 25% de descuento</small>
+                </div>
+                <div className="catalog-price-box">
+                  <RoughFrame shape={CARD_FRAME} color="var(--blue)" className="rough-lines price-option-frame" />
+                  <span>Individual</span>
+                  <strong>{formatPrice(individualPrice, settings.currency)}</strong>
+                  <small>Por vianda</small>
+                </div>
+              </div>
+            )}
             <ul className="catalog-hero-prices">
-              <li>Pedí tu Pack semanal (5 viandas, a elección) y obtené 25% de descuento!</li>
               <li>Envíos gratis todo Vicente López. Otras zonas, consultar.</li>
               <li>Entregas días miércoles y sábados.</li>
             </ul>

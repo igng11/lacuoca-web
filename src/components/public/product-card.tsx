@@ -9,11 +9,6 @@ export function ProductCard({ product, settings }: { product: Product; settings:
   const summary = product.short_description || product.description?.split("\n").find(Boolean);
   const canOrder = product.available && settings.business_open;
 
-  const currency = /^[A-Z]{3}$/.test(settings.currency) ? settings.currency : "ARS";
-  const price = settings.show_prices
-    ? new Intl.NumberFormat("es-AR", { style: "currency", currency, maximumFractionDigits: 0 }).format(product.price)
-    : null;
-
   return (
     <article className="card product-card">
       <RoughFrame shape={CARD_FRAME} />
@@ -32,13 +27,6 @@ export function ProductCard({ product, settings }: { product: Product; settings:
             <Link href={`/producto/${product.slug}`}>{product.name}</Link>
           </h3>
         </div>
-
-        {price && (
-          <div className="product-price-badge" aria-label={`Precio: ${price}`}>
-            <span className="product-price-label">Precio</span>
-            <strong>{price}</strong>
-          </div>
-        )}
 
         {summary && <p className="product-description">{summary}</p>}
 

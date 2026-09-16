@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AboutCarousel } from "@/components/public/about-carousel";
 import { RoughFrame } from "@/components/rough-frame";
-import { ABOUT_FRAME } from "@/data/rough-frame-path";
+import { ABOUT_FRAME, CARD_FRAME } from "@/data/rough-frame-path";
 import { CommentsSection } from "@/components/public/comments-section";
 import { HeroArch } from "@/components/public/hero-arch";
 import recursoOlla from "@/assets/img/abierto@3x.png";
@@ -10,6 +10,7 @@ import { ProductCard } from "@/components/public/product-card";
 import { PublicFooter } from "@/components/public/public-footer";
 import { SiteHeader } from "@/components/public/site-header";
 import { WhatsAppButton } from "@/components/public/whatsapp-button";
+import { formatPrice } from "@/lib/format";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { getProducts, getSettings } from "@/services/catalog";
 
@@ -21,6 +22,10 @@ export default async function HomePage() {
   const visibleProducts = (featured.length ? featured : allProducts).slice(0, 6);
   const aboutPhotos = [settings.about_photo_1_url, settings.about_photo_2_url, settings.about_photo_3_url].filter((photo): photo is string => Boolean(photo));
   const wa = settings.whatsapp_number ? buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message) : null;
+  const availablePrices = allProducts.filter((product) => product.available && product.price > 0).map((product) => product.price);
+  const priceFrequency = availablePrices.reduce((counts, price) => counts.set(price, (counts.get(price) || 0) + 1), new Map<number, number>());
+  const individualPrice = [...priceFrequency.entries()].sort((a, b) => b[1] - a[1] || b[0] - a[0])[0]?.[0];
+  const comboPrice = individualPrice ? individualPrice * 5 * 0.75 : null;
 
   return <>
     <SiteHeader current="home" settings={settings} />
@@ -86,6 +91,22 @@ export default async function HomePage() {
         <div className="curved-text-placeholder">Una primera selección</div>
         <h2>Recomendados de la casa</h2>
         <p>Preparaciones caseras para resolver una comida rica o compartir algo especial.</p>
+        {settings.show_prices && individualPrice && comboPrice && (
+          <div className="catalog-price-options home-price-options" aria-label="Precios de las viandas">
+            <div className="catalog-price-box catalog-price-box-featured">
+              <RoughFrame shape={CARD_FRAME} color="var(--red)" className="rough-lines price-option-frame" />
+              <span>Pack semanal</span>
+              <strong>{formatPrice(comboPrice, settings.currency)}</strong>
+              <small>5 viandas · 25% de descuento</small>
+            </div>
+            <div className="catalog-price-box">
+              <RoughFrame shape={CARD_FRAME} color="var(--blue)" className="rough-lines price-option-frame" />
+              <span>Individual</span>
+              <strong>{formatPrice(individualPrice, settings.currency)}</strong>
+              <small>Por vianda</small>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* GALERÍA */}
@@ -112,11 +133,12 @@ export default async function HomePage() {
           </div>
           <div className="about-copy">
             <h2 className="section-title about-title">Nuestra historia</h2>
-            <p className="about-text about-foundation">Nacimos en 2014 con el amor por la cocina y al barrio de Florida.</p>
+            <p className="about-text about-foundation">Hola, soy Vero, cocinera y mamá de Felipe.</p>
             <div className="about-story" tabIndex={0} aria-label="Nuestra historia">
-              <p className="about-text">Hola! Soy Vero. Soy cocinera hace muchos años. Después de trabajar por Europa y por distintos lugares acá en Argentina, y ya siendo mamá, tuve ganas de volver a mis raíces: abrir un lugar en Florida, mi barrio de toda la vida. Muchos me sugirieron otros lugares, pero para mí el barrio siempre fue el punto de partida.</p>
-              <p className="about-text">Después de buscar mucho, encontré este local que durante años había sido una casa de empanadas. Apenas entré me enamoré: una casa luminosa, ventilada, con esa calidez que pocos locales tienen. Fue en marzo de 2014 cuando el lugar pasó a ser mío, y desde entonces estamos en las callecitas tranquilas del barrio, vendiéndole a los vecinos, a oficinas y a quienes se van cruzando en el camino. Por el camino tuve socios que me acompañaron —Guille primero, Adri después— y hoy sigo sola, con toda mi alma puesta en esto.</p>
-              <p className="about-text">El nombre, La Cuoca, viene de mi apellido de origen italiano, Ruzzante. Quería algo que me representara de verdad, sin caer en los clásicos &ldquo;Casa de...&rdquo; o &ldquo;Taller de...&rdquo;. Algunos todavía me dicen &ldquo;La Cuca&rdquo; o &ldquo;La Coca&rdquo;, y hasta descubrí después que a dos cuadras hay un kiosco llamado El Cuco. Cosas del barrio 🤣</p>
+              <p className="about-text">Estudié Educación Física y Recreación durante varios años, pero en medio de mis búsquedas encontré en la cocina mi pasión. Empecé mis estudios en el IAG y ya no paré.</p>
+              <p className="about-text">Me fui a vivir a España por un año y terminé quedándome siete, trabajando allá. Cuando fui mamá, decidí volver a mis raíces y abrir mi propio lugar acá, en Florida, mi barrio de siempre.</p>
+              <p className="about-text">Encontré este local, que antes había sido una casa de empanadas, y así nació La Cuoca Comidas Caseras. Durante un tiempo me acompañó Guille, después Adri, y actualmente sigo sola. Ya van 14 años en las callecitas tranquilas del mejor barrio.</p>
+              <p className="about-text">Te invito a conocernos y a llevar mi alegría a tu mesa.</p>
             </div>
           </div>
         </div>
