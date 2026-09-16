@@ -11,7 +11,9 @@ import type { BusinessSettings } from "@/types/database";
 
 export function SiteHeader({ current, settings }: { current?: "home" | "catalog"; settings?: BusinessSettings }) {
   const isCatalog = current === "catalog";
-  const whatsappUrl = settings?.whatsapp_number ? buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message) : null;
+  const whatsappUrl = settings?.business_open && settings.whatsapp_number
+    ? buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)
+    : null;
   const [menuOpen, setMenuOpen] = useState(false);
 
   // En /catalogo estos links navegan de verdad a la home con el hash; solo en

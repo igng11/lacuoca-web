@@ -6,9 +6,20 @@ import { getCategories, getProducts } from "@/services/catalog";
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ok?: string; error?: string; q?: string; category?: string; availability?: string }>;
+  searchParams: Promise<{
+    ok?: string;
+    error?: string;
+    q?: string;
+    category?: string;
+    availability?: string;
+    visibility?: string;
+    featured?: string;
+  }>;
 }) {
   const params = await searchParams;
+  const availability = ["available", "unavailable"].includes(params.availability || "") ? params.availability : "";
+  const visibility = ["visible", "hidden"].includes(params.visibility || "") ? params.visibility : "";
+  const featured = ["featured", "regular"].includes(params.featured || "") ? params.featured : "";
   const [categories, allProducts] = await Promise.all([
     getCategories(true),
     getProducts({ includeInactive: true }),
@@ -16,9 +27,11 @@ export default async function ProductsPage({
   const products = allProducts.filter((product) => (
     (!params.q || product.name.toLowerCase().includes(params.q.toLowerCase()))
     && (!params.category || product.category_id === params.category)
-    && (!params.availability || (params.availability === "available" ? product.available : !product.available))
+    && (!availability || (availability === "available" ? product.available : !product.available))
+    && (!visibility || (visibility === "visible" ? product.active : !product.active))
+    && (!featured || (featured === "featured" ? product.featured : !product.featured))
   ));
-  const hasFilters = Boolean(params.q || params.category || params.availability);
+  const hasFilters = Boolean(params.q || params.category || availability || visibility || featured);
 
   return (
     <div className="stack">
@@ -47,15 +60,31 @@ export default async function ProductsPage({
           <label htmlFor="product-category">Categoría</label>
           <select id="product-category" className="input" name="category" defaultValue={params.category}>
             <option value="">Todas las categorías</option>
-            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}{category.active ? "" : " (oculta)"}</option>)}
           </select>
         </div>
         <div className="field">
           <label htmlFor="product-availability">Disponibilidad</label>
-          <select id="product-availability" className="input" name="availability" defaultValue={params.availability}>
+          <select id="product-availability" className="input" name="availability" defaultValue={availability}>
             <option value="">Cualquier disponibilidad</option>
             <option value="available">Disponibles</option>
             <option value="unavailable">No disponibles</option>
+          </select>
+        </div>
+        <div className="field">
+          <label htmlFor="product-visibility">Visibilidad</label>
+          <select id="product-visibility" className="input" name="visibility" defaultValue={visibility}>
+            <option value="">Cualquier visibilidad</option>
+            <option value="visible">Visibles</option>
+            <option value="hidden">Ocultos</option>
+          </select>
+        </div>
+        <div className="field">
+          <label htmlFor="product-featured">Destacado</label>
+          <select id="product-featured" className="input" name="featured" defaultValue={featured}>
+            <option value="">Todos</option>
+            <option value="featured">Destacados</option>
+            <option value="regular">No destacados</option>
           </select>
         </div>
         <div className="filter-actions">
@@ -68,7 +97,12 @@ export default async function ProductsPage({
           <details className="card admin-item" key={product.id}>
             <summary>
               <strong>{product.name}</strong>
-              <div className="muted">{product.category?.name} · {product.available ? "Disponible" : "No disponible"}</div>
+              <div className="muted">
+                {product.category?.name}
+                {product.category && categories.find((category) => category.id === product.category_id)?.active === false ? " (categoría oculta)" : ""}
+                {` · ${product.active ? "Visible" : "Oculto"} · ${product.available ? "Disponible" : "No disponible"}`}
+                {product.featured ? " · Destacado" : ""}
+              </div>
             </summary>
             <ProductForm product={product} categories={categories} />
             <ProductDeleteForm product={product} />

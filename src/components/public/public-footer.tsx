@@ -41,8 +41,7 @@ export function PublicFooter({ settings }: { settings: BusinessSettings }) {
         </div>
       </div>
       <div className="container footer-bottom">
-        <span>© La Cuoca {new Date().getFullYear()} - Todos los derechos reservados.</span>
-        <span>Comida casera · comida feliz</span>
+        <span>© La Cuoca 2026 - Todos los derechos reservados.</span>
       </div>
     </footer>
   );

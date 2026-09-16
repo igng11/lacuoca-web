@@ -25,7 +25,6 @@ export async function updateSession(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/admin") && !isAdmin) {
     const target = request.nextUrl.clone();
     target.pathname = "/login";
-    target.searchParams.set("next", request.nextUrl.pathname);
     if (user) target.searchParams.set("error", "No tenés acceso administrativo.");
     return NextResponse.redirect(target);
   }

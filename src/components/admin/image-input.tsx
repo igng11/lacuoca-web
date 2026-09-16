@@ -9,6 +9,7 @@ export function ImageInput({ id, name, label, current, allowSvg = false }: { id?
   const [objectUrl, setObjectUrl] = useState("");
   const [fileDetails, setFileDetails] = useState("");
   const [error, setError] = useState("");
+  const [removeCurrent, setRemoveCurrent] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputId = id || name;
   const helpId = `${inputId}-help`;
@@ -23,6 +24,7 @@ export function ImageInput({ id, name, label, current, allowSvg = false }: { id?
     setPreview(current || "");
     setFileDetails("");
     setError("");
+    setRemoveCurrent(false);
     inputRef.current?.focus();
   }
 
@@ -70,6 +72,7 @@ export function ImageInput({ id, name, label, current, allowSvg = false }: { id?
             setObjectUrl(next);
             setPreview(next);
             setFileDetails(`${file.name} · ${formatFileSize(file.size)}`);
+            setRemoveCurrent(false);
           }}
         />
       </div>
@@ -82,6 +85,21 @@ export function ImageInput({ id, name, label, current, allowSvg = false }: { id?
       )}
       {error && <small id={errorId} className="field-error" role="alert">{error}</small>}
       {fileDetails && <small className="muted">La imagen se subirá al guardar y puede tardar algunos segundos.</small>}
+      {current && !fileDetails && (
+        <label className="checkbox">
+          <input
+            name={`${name}_remove`}
+            type="checkbox"
+            checked={removeCurrent}
+            onChange={(event) => {
+              const checked = event.currentTarget.checked;
+              setRemoveCurrent(checked);
+              setPreview(checked ? "" : current);
+            }}
+          />
+          Eliminar imagen actual al guardar
+        </label>
+      )}
     </div>
   );
 }

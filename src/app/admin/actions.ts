@@ -53,7 +53,6 @@ export async function saveCategory(data: FormData) {
   const parsed = categorySchema.safeParse({
     id: formString(data, "id") || undefined,
     name: formString(data, "name"),
-    description: formString(data, "description"),
     display_order: formString(data, "display_order"),
     active: formBoolean(data, "active"),
   });
@@ -136,6 +135,7 @@ export async function saveProduct(data: FormData) {
   }
 
   const file = data.get("image");
+  const removeImage = formBoolean(data, "image_remove");
   let uploaded: UploadedImage | undefined;
   try {
     if (file instanceof File && file.size > 0) uploaded = await uploadImage(file, "products");
@@ -150,7 +150,7 @@ export async function saveProduct(data: FormData) {
   const payload = {
     ...values,
     slug,
-    image_url: uploaded?.publicUrl ?? previousImage,
+    image_url: uploaded?.publicUrl ?? (removeImage ? null : previousImage),
   };
   const result = id
     ? await supabase.from("products").update(payload).eq("id", id)
@@ -164,7 +164,7 @@ export async function saveProduct(data: FormData) {
     adminRedirect("/admin/productos", message, "error");
   }
 
-  if (uploaded && previousImage) await discardPreviousImage("products", previousImage);
+  if ((uploaded || removeImage) && previousImage) await discardPreviousImage("products", previousImage);
   revalidatePath("/", "layout");
   adminRedirect("/admin/productos", id ? "Producto actualizado correctamente." : "Producto guardado correctamente.");
 }
@@ -215,6 +215,11 @@ export async function saveSettings(data: FormData) {
   let aboutPhotoUpload1: UploadedImage | undefined;
   let aboutPhotoUpload2: UploadedImage | undefined;
   let aboutPhotoUpload3: UploadedImage | undefined;
+  const removeLogo = formBoolean(data, "logo_remove");
+  const removeHeroImage = formBoolean(data, "hero_image_remove");
+  const removeAboutPhoto1 = formBoolean(data, "about_photo_1_remove");
+  const removeAboutPhoto2 = formBoolean(data, "about_photo_2_remove");
+  const removeAboutPhoto3 = formBoolean(data, "about_photo_3_remove");
   try {
     const logoFile = data.get("logo");
     const heroFile = data.get("hero_image");
@@ -243,11 +248,11 @@ export async function saveSettings(data: FormData) {
     ...parsed.data,
     whatsapp_number: parsed.data.whatsapp_number || null,
     instagram_url: parsed.data.instagram_url || null,
-    logo_url: logoUpload?.publicUrl ?? (current?.logo_url as string | null | undefined) ?? null,
-    hero_image_url: heroUpload?.publicUrl ?? (current?.hero_image_url as string | null | undefined) ?? null,
-    about_photo_1_url: aboutPhotoUpload1?.publicUrl ?? (current?.about_photo_1_url as string | null | undefined) ?? null,
-    about_photo_2_url: aboutPhotoUpload2?.publicUrl ?? (current?.about_photo_2_url as string | null | undefined) ?? null,
-    about_photo_3_url: aboutPhotoUpload3?.publicUrl ?? (current?.about_photo_3_url as string | null | undefined) ?? null,
+    logo_url: logoUpload?.publicUrl ?? (removeLogo ? null : (current?.logo_url as string | null | undefined)) ?? null,
+    hero_image_url: heroUpload?.publicUrl ?? (removeHeroImage ? null : (current?.hero_image_url as string | null | undefined)) ?? null,
+    about_photo_1_url: aboutPhotoUpload1?.publicUrl ?? (removeAboutPhoto1 ? null : (current?.about_photo_1_url as string | null | undefined)) ?? null,
+    about_photo_2_url: aboutPhotoUpload2?.publicUrl ?? (removeAboutPhoto2 ? null : (current?.about_photo_2_url as string | null | undefined)) ?? null,
+    about_photo_3_url: aboutPhotoUpload3?.publicUrl ?? (removeAboutPhoto3 ? null : (current?.about_photo_3_url as string | null | undefined)) ?? null,
   };
   const result = current
     ? await supabase.from("business_settings").update(payload).eq("id", current.id)
@@ -262,19 +267,19 @@ export async function saveSettings(data: FormData) {
     adminRedirect("/admin", "No pudimos guardar la configuración. Intentá nuevamente.", "error");
   }
 
-  if (logoUpload && current?.logo_url) {
+  if ((logoUpload || removeLogo) && current?.logo_url) {
     await discardPreviousImage("branding", current.logo_url as string);
   }
-  if (heroUpload && current?.hero_image_url) {
+  if ((heroUpload || removeHeroImage) && current?.hero_image_url) {
     await discardPreviousImage("branding", current.hero_image_url as string);
   }
-  if (aboutPhotoUpload1 && current?.about_photo_1_url) {
+  if ((aboutPhotoUpload1 || removeAboutPhoto1) && current?.about_photo_1_url) {
     await discardPreviousImage("branding", current.about_photo_1_url as string);
   }
-  if (aboutPhotoUpload2 && current?.about_photo_2_url) {
+  if ((aboutPhotoUpload2 || removeAboutPhoto2) && current?.about_photo_2_url) {
     await discardPreviousImage("branding", current.about_photo_2_url as string);
   }
-  if (aboutPhotoUpload3 && current?.about_photo_3_url) {
+  if ((aboutPhotoUpload3 || removeAboutPhoto3) && current?.about_photo_3_url) {
     await discardPreviousImage("branding", current.about_photo_3_url as string);
   }
   revalidatePath("/", "layout");

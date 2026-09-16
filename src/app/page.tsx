@@ -35,11 +35,8 @@ export default async function HomePage() {
       <section id="hero" className="hero-editorial">
         <div className="container hero-grid">
           <div className="hero-copy">
-            <div className="hero-kicker">
-              <span className={`status-dot ${settings.business_open ? "is-open" : ""}`} aria-hidden="true" />
-              {settings.business_open ? "Hacé tu pedido" : "Consultas pausadas por el momento"}
-            </div>
-            <h1>Tu vianda diaria, con la frescura de lo recien hecho.</h1>
+            <p className="hero-kicker">{settings.hero_title}</p>
+            <h1>{settings.hero_subtitle || settings.hero_title}</h1>
             <div className="hero-actions">
               <Link href="/catalogo" className="btn btn-primary">Ver catálogo</Link>
               {settings.business_open && wa && <WhatsAppButton href={wa} label="Hacer una consulta" />}

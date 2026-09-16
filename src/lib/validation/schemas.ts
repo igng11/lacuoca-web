@@ -18,7 +18,7 @@ export const loginSchema = z.object({
 });
 
 export const categorySchema = z.object({
-  id: z.uuid().optional(), name: requiredText.max(80), description: z.string().trim().max(300),
+  id: z.uuid().optional(), name: requiredText.max(80),
   display_order: z.coerce.number().int().min(0), active: z.boolean(),
 });
 

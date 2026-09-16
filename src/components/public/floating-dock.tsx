@@ -19,7 +19,7 @@ const noSubscription = () => () => {};
 export function FloatingDock({ settings }: { settings?: BusinessSettings }) {
   const isBrowser = useSyncExternalStore(noSubscription, () => true, () => false);
 
-  const whatsappUrl = settings?.whatsapp_number
+  const whatsappUrl = settings?.business_open && settings.whatsapp_number
     ? buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)
     : null;
 

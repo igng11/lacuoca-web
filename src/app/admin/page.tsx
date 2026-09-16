@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Package, Tags, CheckCircle } from "lucide-react";
 import { Feedback } from "@/components/admin/feedback";
-import { Greeting } from "@/components/admin/greeting";
 import { ImageInput } from "@/components/admin/image-input";
 import { FormSubmitButton, PendingFormFields } from "@/components/admin/form-submit-button";
 import { RoughFrame } from "@/components/rough-frame";
@@ -20,8 +19,10 @@ export default async function AdminPage({
     Promise.all([
       s.from("products").select("id", { count: "exact", head: true }),
       s.from("categories").select("id", { count: "exact", head: true }),
-      s.from("products").select("id", { count: "exact", head: true }).eq("available", true),
-      s.from("products").select("id", { count: "exact", head: true }).eq("featured", true),
+      s.from("products").select("id, categories!inner(id)", { count: "exact", head: true })
+        .eq("available", true).eq("active", true).eq("categories.active", true),
+      s.from("products").select("id, categories!inner(id)", { count: "exact", head: true })
+        .eq("featured", true).eq("active", true).eq("categories.active", true),
     ]),
     getSettings(),
     searchParams,
@@ -36,7 +37,6 @@ export default async function AdminPage({
   return (
     <div className="stack">
       <div>
-        <Greeting />
         <div className="title-row">
           <h1>¿Qué querés hacer?</h1>
           <p className="muted">Todo lo importante está a un toque.</p>
@@ -62,18 +62,32 @@ export default async function AdminPage({
           <strong>Información del negocio</strong>
           {/* Corto a propósito: si envuelve en mobile, el alto del summary cambia
               y el marco (proporción fija) se deforma. */}
-          <div className="muted">Datos, imágenes y colores</div>
+          <div className="muted">Datos e imágenes</div>
         </summary>
         <form action={saveSettings} className="stack">
           <PendingFormFields>
-            <h2>Datos principales</h2>
+            <h2>Textos de la portada</h2>
+            <div className="field">
+              <label htmlFor="hero-title">Pre-título (texto rojo superior) *</label>
+              <input id="hero-title" className="input" name="hero_title" required defaultValue={settings.hero_title} />
+              <p className="muted">Aparece arriba del título principal, sin borde ni punto decorativo.</p>
+            </div>
+            <div className="field">
+              <label htmlFor="hero-subtitle">Título principal (texto azul grande) *</label>
+              <input id="hero-subtitle" className="input" name="hero_subtitle" required defaultValue={settings.hero_subtitle || ""} />
+              <p className="muted">Es el encabezado principal visible en la portada.</p>
+            </div>
+
+            <h2>Datos generales del negocio</h2>
             <div className="field">
               <label htmlFor="business-name">Nombre del negocio *</label>
               <input id="business-name" className="input" name="business_name" required defaultValue={settings.business_name} />
+              <p className="muted">Se usa en la pestaña del navegador, metadatos y como alternativa cuando no hay logo.</p>
             </div>
             <div className="field">
-              <label htmlFor="business-description">Descripción</label>
+              <label htmlFor="business-description">Descripción general</label>
               <textarea id="business-description" className="input" name="description" rows={4} defaultValue={settings.description || ""} />
+              <p className="muted">Se usa para buscadores y al compartir el sitio; no reemplaza el título de la portada.</p>
             </div>
             <div className="form-grid two">
               <div className="field">
@@ -98,18 +112,10 @@ export default async function AdminPage({
               <textarea id="opening-hours" className="input" name="opening_hours" rows={3} defaultValue={settings.opening_hours || ""} />
             </div>
 
-            <h2>Portada e imágenes</h2>
-            <div className="field">
-              <label htmlFor="hero-title">Título principal *</label>
-              <input id="hero-title" className="input" name="hero_title" required defaultValue={settings.hero_title} />
-            </div>
-            <div className="field">
-              <label htmlFor="hero-subtitle">Texto secundario</label>
-              <input id="hero-subtitle" className="input" name="hero_subtitle" defaultValue={settings.hero_subtitle || ""} />
-            </div>
+            <h2>Imágenes</h2>
             <div className="form-grid two">
               <ImageInput name="logo" label="Logo (se muestra en el menú de arriba)" current={settings.logo_url} allowSvg />
-              <ImageInput name="hero_image" label="Portada (fondo grande del inicio)" current={settings.hero_image_url} />
+              <ImageInput name="hero_image" label="Imagen principal de la portada" current={settings.hero_image_url} />
             </div>
             <h3>Fotos de la sección &ldquo;Nosotros&rdquo;</h3>
             <div className="form-grid two">
@@ -137,8 +143,8 @@ export default async function AdminPage({
         {[
           ["Productos", products],
           ["Categorías", categories],
-          ["Disponibles", available],
-          ["Destacados", featured],
+          ["Disponibles visibles", available],
+          ["Destacados visibles", featured],
         ].map(([label, count]) => (
           <div className="card" style={{ padding: "1.1rem" }} key={label}>
             <RoughFrame shape={ABOUT_FRAME} />

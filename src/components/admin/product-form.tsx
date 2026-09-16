@@ -19,7 +19,7 @@ export function ProductForm({ product, categories }: { product?: Product; catego
           <label htmlFor={`${prefix}-category`}>Categoría *</label>
           <select id={`${prefix}-category`} className="input" name="category_id" defaultValue={product?.category_id} required>
             <option value="">Elegir…</option>
-            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+            {categories.map((category) => <option key={category.id} value={category.id}>{category.name}{category.active ? "" : " (oculta)"}</option>)}
           </select>
         </div>
         <div className="field">

@@ -15,10 +15,6 @@ export function CategoryForm({ category }: { category?: Category }) {
           <input id={`${prefix}-name`} className="input" name="name" autoComplete="off" required maxLength={80} defaultValue={category?.name} />
         </div>
         <div className="field">
-          <label htmlFor={`${prefix}-description`}>Descripción</label>
-          <textarea id={`${prefix}-description`} className="input" name="description" rows={3} defaultValue={category?.description || ""} />
-        </div>
-        <div className="field">
           <label htmlFor={`${prefix}-order`}>Orden</label>
           <input id={`${prefix}-order`} className="input" name="display_order" type="number" inputMode="numeric" min="0" step="1" defaultValue={category?.display_order ?? 0} />
         </div>
