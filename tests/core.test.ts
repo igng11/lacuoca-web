@@ -5,6 +5,7 @@ import { buildCartWhatsAppUrl, buildWhatsAppUrl, normalizeWhatsAppNumber } from 
 import { productSchema, settingsSchema } from "@/lib/validation/schemas";
 import { detectImageMime, storagePathFromPublicUrl } from "@/lib/storage";
 import { imageSelectionError, MAX_IMAGE_SIZE } from "@/lib/image-validation";
+import { calculateCartPricing, type CartItem } from "@/lib/cart";
 
 const validSettings = {
   business_name: "La Cuoca",
@@ -71,6 +72,33 @@ describe("WhatsApp", () => {
     expect(text).toContain("2x Tarta de verdura");
     expect(text).toContain("1x Milanesa napolitana");
     expect(text).toContain("Total: " + new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 2 }).format(14500));
+  });
+
+  it("incluye nombre y apellido en los datos de entrega", () => {
+    const url = buildCartWhatsAppUrl({
+      number: "+54 9 11-2345-6789",
+      items: [{ name: "Vianda", price: 12000, quantity: 6 }],
+      currency: "ARS",
+      showPrice: true,
+      customerName: "María González",
+      address: "Güemes 1750",
+    });
+    expect(new URL(url!).searchParams.get("text")).toContain("Nombre y apellido: María González");
+  });
+});
+
+describe("precio del carrito", () => {
+  const item = (quantity: number): CartItem => ({
+    productId: "1", slug: "vianda", name: "Vianda", price: 16000,
+    imageUrl: null, flavor: null, quantity,
+  });
+
+  it("mantiene el precio individual hasta 5 viandas", () => {
+    expect(calculateCartPricing([item(5)])).toEqual({ totalCount: 5, totalPrice: 80000, hasBulkPrice: false });
+  });
+
+  it("calcula cada vianda a 12000 cuando hay más de 5", () => {
+    expect(calculateCartPricing([item(6)])).toEqual({ totalCount: 6, totalPrice: 72000, hasBulkPrice: true });
   });
 });
 

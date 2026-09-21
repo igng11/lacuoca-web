@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
-import { loadCart, saveCart, type CartItem } from "@/lib/cart";
+import { calculateCartPricing, loadCart, saveCart, type CartItem } from "@/lib/cart";
 import type { Product } from "@/types/database";
 
 /**
@@ -64,10 +64,7 @@ export function clear() {
 
 export function useCart() {
   const cartItems = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const { totalCount, totalPrice } = useMemo(() => ({
-    totalCount: cartItems.reduce((sum, item) => sum + item.quantity, 0),
-    totalPrice: cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0),
-  }), [cartItems]);
+  const { totalCount, totalPrice, hasBulkPrice } = useMemo(() => calculateCartPricing(cartItems), [cartItems]);
 
-  return { items: cartItems, totalCount, totalPrice, addItem, removeItem, setQuantity, clear };
+  return { items: cartItems, totalCount, totalPrice, hasBulkPrice, addItem, removeItem, setQuantity, clear };
 }

@@ -7,15 +7,18 @@ import { ArrowLeft, Minus, Plus, ShoppingBasket, Trash2, X } from "lucide-react"
 import { useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/format";
 import { buildCartWhatsAppUrl } from "@/lib/whatsapp";
+import { BULK_VIANDA_UNIT_PRICE } from "@/lib/cart";
 import type { BusinessSettings } from "@/types/database";
 
 type Stage = "cart" | "address" | "confirm";
 const DELIVERY_DAYS = ["Miércoles", "Sábado"];
 
 export function CartWidget({ settings }: { settings?: BusinessSettings | null }) {
-  const { items, totalCount, totalPrice, removeItem, setQuantity, clear } = useCart();
+  const { items, totalCount, totalPrice, hasBulkPrice, removeItem, setQuantity, clear } = useCart();
   const [open, setOpen] = useState(false);
   const [stage, setStage] = useState<Stage>("cart");
+  const [customerName, setCustomerName] = useState("");
+  const [customerNameError, setCustomerNameError] = useState(false);
   const [address, setAddress] = useState("");
   const [addressError, setAddressError] = useState(false);
   const [deliveryDay, setDeliveryDay] = useState("");
@@ -28,6 +31,7 @@ export function CartWidget({ settings }: { settings?: BusinessSettings | null })
   const close = () => {
     setOpen(false);
     setStage("cart");
+    setCustomerNameError(false);
     setAddressError(false);
     setDeliveryDayError(false);
   };
@@ -35,9 +39,15 @@ export function CartWidget({ settings }: { settings?: BusinessSettings | null })
   const checkoutUrl = canCheckout
     ? buildCartWhatsAppUrl({
         number: settings.whatsapp_number,
-        items: items.map((item) => ({ name: item.name, price: item.price, quantity: item.quantity, flavor: item.flavor })),
+        items: items.map((item) => ({
+          name: item.name,
+          price: hasBulkPrice ? BULK_VIANDA_UNIT_PRICE : item.price,
+          quantity: item.quantity,
+          flavor: item.flavor,
+        })),
         currency: settings.currency,
         showPrice: settings.show_prices,
+        customerName,
         address,
         deliveryDay,
       })
@@ -89,7 +99,12 @@ export function CartWidget({ settings }: { settings?: BusinessSettings | null })
                       <div className="cart-item-info">
                         <span className="cart-item-name">{item.name}</span>
                         {item.flavor && <span className="cart-item-flavor">{item.flavor}</span>}
-                        {settings.show_prices && <span className="cart-item-price">{formatPrice(item.price, settings.currency)}</span>}
+                        {settings.show_prices && (
+                          <span className="cart-item-price">
+                            {formatPrice(hasBulkPrice ? BULK_VIANDA_UNIT_PRICE : item.price, settings.currency)}
+                            {hasBulkPrice ? " c/u por cantidad" : ""}
+                          </span>
+                        )}
                         <div className="cart-item-qty">
                           <button type="button" aria-label={`Restar ${item.name}`} onClick={() => setQuantity(item.productId, item.quantity - 1, item.flavor)}>
                             <Minus size={14} aria-hidden="true" />
@@ -109,7 +124,10 @@ export function CartWidget({ settings }: { settings?: BusinessSettings | null })
 
                 <div className="cart-drawer-footer">
                   {settings.show_prices && (
-                    <div className="cart-total"><span>Total</span><strong>{formatPrice(totalPrice, settings.currency)}</strong></div>
+                    <>
+                      {hasBulkPrice && <p className="muted">Más de 5 viandas: {formatPrice(BULK_VIANDA_UNIT_PRICE, settings.currency)} cada una.</p>}
+                      <div className="cart-total"><span>Total</span><strong>{formatPrice(totalPrice, settings.currency)}</strong></div>
+                    </>
                   )}
                   {canCheckout ? (
                     <button type="button" className="btn btn-primary" onClick={() => setStage("address")}>
@@ -127,6 +145,20 @@ export function CartWidget({ settings }: { settings?: BusinessSettings | null })
 
             {items.length > 0 && stage === "address" && (
               <div className="cart-checkout-step">
+                <div className="field">
+                  <label htmlFor="cart-customer-name">Nombre y apellido</label>
+                  <input
+                    id="cart-customer-name"
+                    className="input"
+                    type="text"
+                    autoComplete="name"
+                    maxLength={120}
+                    placeholder="Ej.: María González"
+                    value={customerName}
+                    onChange={(event) => { setCustomerName(event.target.value); setCustomerNameError(false); }}
+                  />
+                  {customerNameError && <small className="cart-checkout-error">Ingresá tu nombre y apellido.</small>}
+                </div>
                 <div className="field">
                   <label htmlFor="cart-address">Dirección de entrega</label>
                   <textarea
@@ -161,6 +193,7 @@ export function CartWidget({ settings }: { settings?: BusinessSettings | null })
                     className="btn btn-primary"
                     onClick={() => {
                       let ok = true;
+                      if (customerName.trim().split(/\s+/).length < 2) { setCustomerNameError(true); ok = false; }
                       if (!address.trim()) { setAddressError(true); ok = false; }
                       if (!deliveryDay) { setDeliveryDayError(true); ok = false; }
                       if (!ok) return;
@@ -179,13 +212,17 @@ export function CartWidget({ settings }: { settings?: BusinessSettings | null })
                   {items.map((item) => (
                     <li key={`${item.productId}-${item.flavor ?? ""}`}>
                       <span>{item.quantity}x {item.name}{item.flavor ? ` (${item.flavor})` : ""}</span>
-                      {settings.show_prices && <span>{formatPrice(item.price * item.quantity, settings.currency)}</span>}
+                      {settings.show_prices && <span>{formatPrice((hasBulkPrice ? BULK_VIANDA_UNIT_PRICE : item.price) * item.quantity, settings.currency)}</span>}
                     </li>
                   ))}
                 </ul>
                 {settings.show_prices && (
                   <div className="cart-total"><span>Total</span><strong>{formatPrice(totalPrice, settings.currency)}</strong></div>
                 )}
+                <div className="cart-confirm-address">
+                  <strong>Nombre y apellido</strong>
+                  <p>{customerName}</p>
+                </div>
                 <div className="cart-confirm-address">
                   <strong>Dirección de entrega</strong>
                   <p>{address}</p>

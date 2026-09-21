@@ -8,6 +8,20 @@ export type CartItem = {
   quantity: number;
 };
 
+export const BULK_VIANDA_THRESHOLD = 5;
+export const BULK_VIANDA_UNIT_PRICE = 12000;
+
+export function calculateCartPricing(items: CartItem[]) {
+  const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const hasBulkPrice = totalCount > BULK_VIANDA_THRESHOLD;
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.quantity * (hasBulkPrice ? BULK_VIANDA_UNIT_PRICE : item.price),
+    0,
+  );
+
+  return { totalCount, totalPrice, hasBulkPrice };
+}
+
 const STORAGE_KEY = "lacuoca-cart";
 
 export function loadCart(): CartItem[] {

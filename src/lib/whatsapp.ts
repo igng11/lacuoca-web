@@ -14,6 +14,7 @@ export function buildCartWhatsAppUrl(input: {
   items: { name: string; price: number; quantity: number; flavor?: string | null }[];
   currency: string;
   showPrice: boolean;
+  customerName?: string;
   address?: string;
   deliveryDay?: string;
 }) {
@@ -25,7 +26,8 @@ export function buildCartWhatsAppUrl(input: {
   const total = input.showPrice
     ? `\n\nTotal: ${formatPrice(input.items.reduce((sum, item) => sum + item.price * item.quantity, 0), input.currency)}`
     : "";
+  const customerName = input.customerName?.trim() ? `\n\nNombre y apellido: ${input.customerName.trim()}` : "";
   const address = input.address?.trim() ? `\n\nDirección de entrega: ${input.address.trim()}` : "";
   const deliveryDay = input.deliveryDay?.trim() ? `\nDía de entrega: ${input.deliveryDay.trim()}` : "";
-  return buildWhatsAppUrl(input.number, `Hola! Quiero hacer este pedido:\n${lines.join("\n")}${total}${address}${deliveryDay}`);
+  return buildWhatsAppUrl(input.number, `Hola! Quiero hacer este pedido:\n${lines.join("\n")}${total}${customerName}${address}${deliveryDay}`);
 }
